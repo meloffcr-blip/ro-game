@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
+  <div id="custom-cursor"></div>
+  <div id="cursor-trail"></div>
     <div class="container">
         <a href="../index.html" class="back-btn">← العودة للرئيسية</a>
         <h1>🏃♂️ أمسكني لو تقدر!</h1>
@@ -30,5 +32,8 @@
         </div>
     </div>
     <script src="../assets/js/catch-me.js"></script>
+  <script>
+    const _c=document.getElementById("custom-cursor"),_t=document.getElementById("cursor-trail");let _mx=-100,_my=-100,_tx=-100,_ty=-100;document.addEventListener("mousemove",e=>{_mx=e.clientX;_my=e.clientY;_c.style.left=_mx+"px";_c.style.top=_my+"px";});(function a(){_tx+=(_mx-_tx)*.14;_ty+=(_my-_ty)*.14;_t.style.left=_tx+"px";_t.style.top=_ty+"px";requestAnimationFrame(a);})();document.querySelectorAll("a,button").forEach(e=>{e.addEventListener("mouseenter",()=>{_c.style.width="26px";_c.style.height="26px";_t.style.width="52px";_t.style.height="52px";});e.addEventListener("mouseleave",()=>{_c.style.width="18px";_c.style.height="18px";_t.style.width="36px";_t.style.height="36px";});});
+  </script>
 </body>
 </html>
