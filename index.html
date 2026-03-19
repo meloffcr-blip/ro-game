@@ -1,538 +1,663 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>إلى حبيبي رحمة ❤️</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --rose:    #e8556d;
-      --rose-lt: #f7a3b0;
-      --blush:   #fce8ec;
-      --cream:   #fff8f0;
-      --ink:     #2a1218;
-      --muted:   #9e6472;
-      --gold:    #c9914a;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إلى حبيبي رحمة ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&family=Aref+Ruqaa:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --rose: #e8556d;
+            --rose-lt: #f7a3b0;
+            --blush: #fce8ec;
+            --cream: #fff8f0;
+            --ink: #2a1218;
+            --muted: #9e6472;
+            --gold: #c9914a;
+        }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    body {
-      font-family: 'Tajawal', sans-serif;
-      background: var(--cream);
-      color: var(--ink);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    /* ─── NOISE TEXTURE OVERLAY ─── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0;
-      pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      opacity: .5;
-    }
+        /* ─── NOISE TEXTURE OVERLAY ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: .5;
+        }
 
-    /* ─── HERO ─── */
-    .hero {
-      position: relative;
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 24px;
-      overflow: hidden;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 0%,  #fce1e6 0%, transparent 70%),
-        radial-gradient(ellipse 60% 40% at 80% 100%, #fce8d0 0%, transparent 70%),
-        var(--cream);
-    }
+        /* ─── HERO ─── */
+        .hero {
+            position: relative;
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 0%, #fce1e6 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 100%, #fce8d0 0%, transparent 70%),
+                var(--cream);
+        }
 
-    /* decorative blobs */
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: .35;
-      pointer-events: none;
-      animation: drift 12s ease-in-out infinite alternate;
-    }
-    .blob-1 { width: 420px; height: 420px; background: var(--rose-lt); top: -120px; right: -80px; animation-delay: 0s; }
-    .blob-2 { width: 300px; height: 300px; background: #fbd3a5; bottom: -60px; left: -60px; animation-delay: -4s; }
-    .blob-3 { width: 200px; height: 200px; background: var(--rose); top: 40%; left: 5%; opacity: .15; animation-delay: -8s; }
+        /* decorative blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: .35;
+            pointer-events: none;
+            animation: drift 12s ease-in-out infinite alternate;
+        }
 
-    @keyframes drift {
-      from { transform: translate(0, 0) scale(1); }
-      to   { transform: translate(20px, 30px) scale(1.08); }
-    }
+        .blob-1 {
+            width: 420px;
+            height: 420px;
+            background: var(--rose-lt);
+            top: -120px;
+            right: -80px;
+            animation-delay: 0s;
+        }
 
-    /* date badge */
-    .badge {
-      position: relative; z-index: 2;
-      display: inline-flex; align-items: center; gap: 8px;
-      background: white;
-      border: 1px solid #f0c8d0;
-      color: var(--muted);
-      font-size: .82rem;
-      font-weight: 700;
-      letter-spacing: .05em;
-      padding: 7px 18px;
-      border-radius: 99px;
-      margin-bottom: 32px;
-      box-shadow: 0 2px 12px rgba(232,85,109,.12);
-      opacity: 0;
-      animation: fadeUp .7s .2s forwards;
-    }
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            background: #fbd3a5;
+            bottom: -60px;
+            left: -60px;
+            animation-delay: -4s;
+        }
 
-    /* big heart */
-    .hero-heart {
-      position: relative; z-index: 2;
-      font-size: clamp(4rem, 12vw, 7rem);
-      line-height: 1;
-      margin-bottom: 24px;
-      animation: fadeUp .7s .3s forwards, pulse 2.4s 1s ease-in-out infinite;
-      opacity: 0;
-      filter: drop-shadow(0 8px 24px rgba(232,85,109,.35));
-    }
+        .blob-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--rose);
+            top: 40%;
+            left: 5%;
+            opacity: .15;
+            animation-delay: -8s;
+        }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50%       { transform: scale(1.08); }
-    }
+        @keyframes drift {
+            from {
+                transform: translate(0, 0) scale(1);
+            }
 
-    /* heading */
-    .hero-heading {
-      position: relative; z-index: 2;
-      font-family: 'Aref Ruqaa', serif;
-      font-size: clamp(2rem, 6vw, 3.8rem);
-      font-weight: 700;
-      line-height: 1.25;
-      text-align: center;
-      color: var(--ink);
-      margin-bottom: 12px;
-      opacity: 0;
-      animation: fadeUp .7s .45s forwards;
-    }
+            to {
+                transform: translate(20px, 30px) scale(1.08);
+            }
+        }
 
-    .hero-heading span {
-      color: var(--rose);
-      position: relative;
-    }
-    .hero-heading span::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; left: 0; right: 0;
-      height: 3px;
-      background: var(--rose-lt);
-      border-radius: 4px;
-    }
+        /* date badge */
+        .badge {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid #f0c8d0;
+            color: var(--muted);
+            font-size: .82rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+            padding: 7px 18px;
+            border-radius: 99px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 12px rgba(232, 85, 109, .12);
+            opacity: 0;
+            animation: fadeUp .7s .2s forwards;
+        }
 
-    /* subtitle */
-    .hero-sub {
-      position: relative; z-index: 2;
-      font-size: clamp(1rem, 3vw, 1.25rem);
-      color: var(--muted);
-      font-weight: 300;
-      text-align: center;
-      margin-bottom: 36px;
-      opacity: 0;
-      animation: fadeUp .7s .6s forwards;
-    }
+        /* big heart */
+        .hero-heart {
+            position: relative;
+            z-index: 2;
+            font-size: clamp(4rem, 12vw, 7rem);
+            line-height: 1;
+            margin-bottom: 24px;
+            animation: fadeUp .7s .3s forwards, pulse 2.4s 1s ease-in-out infinite;
+            opacity: 0;
+            filter: drop-shadow(0 8px 24px rgba(232, 85, 109, .35));
+        }
 
-    /* letter card */
-    .letter-card {
-      position: relative; z-index: 2;
-      background: white;
-      border: 1px solid #f0d5da;
-      border-radius: 24px;
-      padding: 36px 40px;
-      max-width: 620px;
-      width: 100%;
-      box-shadow:
-        0 1px 0 #f5c2cc,
-        0 8px 40px rgba(232,85,109,.1),
-        0 32px 80px rgba(42,18,24,.06);
-      opacity: 0;
-      animation: fadeUp .8s .75s forwards;
-      margin-bottom: 28px;
-    }
+        @keyframes pulse {
 
-    .letter-card::before {
-      content: '❝';
-      position: absolute;
-      top: -18px; right: 30px;
-      font-size: 3.5rem;
-      color: var(--rose-lt);
-      line-height: 1;
-    }
+            0%,
+            100% {
+                transform: scale(1);
+            }
 
-    .letter-text {
-      font-size: clamp(.98rem, 2.5vw, 1.15rem);
-      line-height: 2;
-      color: #4a2830;
-      font-weight: 400;
-    }
+            50% {
+                transform: scale(1.08);
+            }
+        }
 
-    .letter-sig {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 28px;
-      padding-top: 20px;
-      border-top: 1px dashed #f0c8d0;
-    }
+        /* heading */
+        .hero-heading {
+            position: relative;
+            z-index: 2;
+            font-family: 'Aref Ruqaa', serif;
+            font-size: clamp(2rem, 6vw, 3.8rem);
+            font-weight: 700;
+            line-height: 1.25;
+            text-align: center;
+            color: var(--ink);
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: fadeUp .7s .45s forwards;
+        }
 
-    .sig-dot {
-      width: 36px; height: 36px;
-      background: linear-gradient(135deg, var(--rose), var(--rose-lt));
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 1rem;
-      flex-shrink: 0;
-    }
+        .hero-heading span {
+            color: var(--rose);
+            position: relative;
+        }
 
-    .sig-text { font-size: .95rem; color: var(--muted); }
-    .sig-text strong { display: block; color: var(--ink); font-size: 1.05rem; }
+        .hero-heading span::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--rose-lt);
+            border-radius: 4px;
+        }
 
-    /* celebrate button */
-    .celebrate-btn {
-      position: relative; z-index: 2;
-      display: inline-flex; align-items: center; gap: 10px;
-      background: linear-gradient(135deg, var(--rose), #c83d55);
-      color: white;
-      border: none;
-      padding: 16px 40px;
-      font-size: 1.1rem;
-      font-family: 'Tajawal', sans-serif;
-      font-weight: 700;
-      border-radius: 99px;
-      cursor: pointer;
-      box-shadow: 0 8px 32px rgba(232,85,109,.4);
-      transition: transform .2s, box-shadow .2s;
-      opacity: 0;
-      animation: fadeUp .7s .95s forwards;
-      margin-bottom: 20px;
-    }
+        /* subtitle */
+        .hero-sub {
+            position: relative;
+            z-index: 2;
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            color: var(--muted);
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 36px;
+            opacity: 0;
+            animation: fadeUp .7s .6s forwards;
+        }
 
-    .celebrate-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(232,85,109,.5); }
-    .celebrate-btn:active { transform: translateY(0); }
+        /* letter card */
+        .letter-card {
+            position: relative;
+            z-index: 2;
+            background: white;
+            border: 1px solid #f0d5da;
+            border-radius: 24px;
+            padding: 36px 40px;
+            max-width: 620px;
+            width: 100%;
+            box-shadow:
+                0 1px 0 #f5c2cc,
+                0 8px 40px rgba(232, 85, 109, .1),
+                0 32px 80px rgba(42, 18, 24, .06);
+            opacity: 0;
+            animation: fadeUp .8s .75s forwards;
+            margin-bottom: 28px;
+        }
 
-    /* scroll hint */
-    .scroll-hint {
-      position: relative; z-index: 2;
-      font-size: .82rem;
-      color: var(--muted);
-      display: flex; align-items: center; gap: 6px;
-      opacity: 0;
-      animation: fadeUp .6s 1.2s forwards;
-    }
+        .letter-card::before {
+            content: '❝';
+            position: absolute;
+            top: -18px;
+            right: 30px;
+            font-size: 3.5rem;
+            color: var(--rose-lt);
+            line-height: 1;
+        }
 
-    .scroll-hint::before,
-    .scroll-hint::after {
-      content: '';
-      width: 30px; height: 1px;
-      background: var(--rose-lt);
-    }
+        .letter-text {
+            font-size: clamp(.98rem, 2.5vw, 1.15rem);
+            line-height: 2;
+            color: #4a2830;
+            font-weight: 400;
+        }
 
-    /* ─── SECTION HEADER ─── */
-    .section-header {
-      text-align: center;
-      padding: 80px 24px 0;
-    }
+        .letter-sig {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px dashed #f0c8d0;
+        }
 
-    .section-label {
-      display: inline-block;
-      font-size: .78rem;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--rose);
-      background: #fce8ec;
-      padding: 5px 14px;
-      border-radius: 99px;
-      margin-bottom: 16px;
-    }
+        .sig-dot {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--rose), var(--rose-lt));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
 
-    .section-title {
-      font-family: 'Aref Ruqaa', serif;
-      font-size: clamp(1.6rem, 5vw, 2.6rem);
-      font-weight: 700;
-      color: var(--ink);
-      line-height: 1.3;
-    }
+        .sig-text {
+            font-size: .95rem;
+            color: var(--muted);
+        }
 
-    /* ─── ACTIVITY GRID ─── */
-    .activities-section {
-      padding: 40px 24px 100px;
-      max-width: 760px;
-      margin: 0 auto;
-    }
+        .sig-text strong {
+            display: block;
+            color: var(--ink);
+            font-size: 1.05rem;
+        }
 
-    .activity-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-top: 40px;
-    }
+        /* celebrate button */
+        .celebrate-btn {
+            position: relative;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--rose), #c83d55);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(232, 85, 109, .4);
+            transition: transform .2s, box-shadow .2s;
+            opacity: 0;
+            animation: fadeUp .7s .95s forwards;
+            margin-bottom: 20px;
+        }
 
-    /* wide card spans 2 cols on large screens */
-    .activity-card--wide {
-      grid-column: span 2;
-    }
+        .celebrate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 40px rgba(232, 85, 109, .5);
+        }
 
-    @media (max-width: 480px) {
-      .activity-card--wide { grid-column: span 1; }
-    }
+        .celebrate-btn:active {
+            transform: translateY(0);
+        }
 
-    .activity-card {
-      position: relative;
-      background: white;
-      border: 1px solid #f0d5da;
-      border-radius: 20px;
-      padding: 28px 24px;
-      text-decoration: none;
-      color: var(--ink);
-      overflow: hidden;
-      transition: transform .25s, box-shadow .25s, border-color .25s;
-      box-shadow: 0 2px 12px rgba(42,18,24,.05);
-    }
+        /* scroll hint */
+        .scroll-hint {
+            position: relative;
+            z-index: 2;
+            font-size: .82rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            animation: fadeUp .6s 1.2s forwards;
+        }
 
-    .activity-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(232,85,109,.06), transparent);
-      opacity: 0;
-      transition: opacity .25s;
-      border-radius: inherit;
-    }
+        .scroll-hint::before,
+        .scroll-hint::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--rose-lt);
+        }
 
-    .activity-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 48px rgba(232,85,109,.18);
-      border-color: var(--rose-lt);
-    }
+        /* ─── SECTION HEADER ─── */
+        .section-header {
+            text-align: center;
+            padding: 80px 24px 0;
+        }
 
-    .activity-card:hover::after { opacity: 1; }
+        .section-label {
+            display: inline-block;
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--rose);
+            background: #fce8ec;
+            padding: 5px 14px;
+            border-radius: 99px;
+            margin-bottom: 16px;
+        }
 
-    /* accent stripe at top */
-    .activity-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--rose), var(--rose-lt));
-      opacity: 0;
-      transition: opacity .25s;
-      border-radius: 20px 20px 0 0;
-    }
-    .activity-card:hover::before { opacity: 1; }
+        .section-title {
+            font-family: 'Aref Ruqaa', serif;
+            font-size: clamp(1.6rem, 5vw, 2.6rem);
+            font-weight: 700;
+            color: var(--ink);
+            line-height: 1.3;
+        }
 
-    .card-icon {
-      font-size: 2.4rem;
-      margin-bottom: 14px;
-      display: block;
-      transition: transform .3s;
-    }
+        /* ─── ACTIVITY GRID ─── */
+        .activities-section {
+            padding: 40px 24px 100px;
+            max-width: 760px;
+            margin: 0 auto;
+        }
 
-    .activity-card:hover .card-icon { transform: scale(1.15) rotate(-5deg); }
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 40px;
+        }
 
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: var(--ink);
-    }
+        /* wide card spans 2 cols on large screens */
+        .activity-card--wide {
+            grid-column: span 2;
+        }
 
-    .card-desc {
-      font-size: .9rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
+        @media (max-width: 480px) {
+            .activity-card--wide {
+                grid-column: span 1;
+            }
+        }
 
-    .card-arrow {
-      position: absolute;
-      bottom: 20px; left: 20px;
-      font-size: .85rem;
-      color: var(--rose);
-      opacity: 0;
-      transform: translateX(6px);
-      transition: opacity .25s, transform .25s;
-    }
+        .activity-card {
+            position: relative;
+            background: white;
+            border: 1px solid #f0d5da;
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-decoration: none;
+            color: var(--ink);
+            overflow: hidden;
+            transition: transform .25s, box-shadow .25s, border-color .25s;
+            box-shadow: 0 2px 12px rgba(42, 18, 24, .05);
+        }
 
-    .activity-card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+        .activity-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(232, 85, 109, .06), transparent);
+            opacity: 0;
+            transition: opacity .25s;
+            border-radius: inherit;
+        }
 
-    /* ─── FOOTER ─── */
-    footer {
-      text-align: center;
-      padding: 40px 24px;
-      color: var(--muted);
-      font-size: .88rem;
-      border-top: 1px solid #f0d5da;
-      background: white;
-    }
+        .activity-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 48px rgba(232, 85, 109, .18);
+            border-color: var(--rose-lt);
+        }
 
-    footer span { color: var(--rose); font-size: 1rem; }
+        .activity-card:hover::after {
+            opacity: 1;
+        }
 
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(22px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+        /* accent stripe at top */
+        .activity-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--rose), var(--rose-lt));
+            opacity: 0;
+            transition: opacity .25s;
+            border-radius: 20px 20px 0 0;
+        }
 
-    /* ─── FLOATING HEARTS ─── */
-    .float-heart {
-      position: fixed;
-      pointer-events: none;
-      font-size: 1.6rem;
-      animation: floatUp 3.5s ease-in forwards;
-      z-index: 9999;
-    }
+        .activity-card:hover::before {
+            opacity: 1;
+        }
 
-    @keyframes floatUp {
-      0%   { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
-      100% { opacity: 0; transform: translateY(-90vh) rotate(480deg) scale(.4); }
-    }
+        .card-icon {
+            font-size: 2.4rem;
+            margin-bottom: 14px;
+            display: block;
+            transition: transform .3s;
+        }
 
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 480px) {
-      .letter-card { padding: 28px 22px; }
-      .section-header { padding-top: 60px; }
-    }
-  </style>
+        .activity-card:hover .card-icon {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--ink);
+        }
+
+        .card-desc {
+            font-size: .9rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .card-arrow {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: .85rem;
+            color: var(--rose);
+            opacity: 0;
+            transform: translateX(6px);
+            transition: opacity .25s, transform .25s;
+        }
+
+        .activity-card:hover .card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: var(--muted);
+            font-size: .88rem;
+            border-top: 1px solid #f0d5da;
+            background: white;
+        }
+
+        footer span {
+            color: var(--rose);
+            font-size: 1rem;
+        }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── FLOATING HEARTS ─── */
+        .float-heart {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1.6rem;
+            animation: floatUp 3.5s ease-in forwards;
+            z-index: 9999;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-90vh) rotate(480deg) scale(.4);
+            }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 480px) {
+            .letter-card {
+                padding: 28px 22px;
+            }
+
+            .section-header {
+                padding-top: 60px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-  <!-- ═══════════════ HERO ═══════════════ -->
-  <section class="hero">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section class="hero">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
 
-    <div class="badge">💌 &nbsp;رسالة خاصة لرحمة</div>
+        <div class="badge">💌 &nbsp;رسالة خاصة لرحمة</div>
 
-    <div class="hero-heart">❤️</div>
+        <div class="hero-heart">❤️</div>
 
-    <h1 class="hero-heading">
-      إلى <span>أغلى إنسانة</span><br/>في حياتي
-    </h1>
+        <h1 class="hero-heading">
+            إلى <span>أغلى إنسانة</span><br />في حياتي
+        </h1>
 
-    <p class="hero-sub">حبيبي وروح قلبي، رحومتي</p>
+        <p class="hero-sub">حبيبي وروح قلبي، رحومتي</p>
 
-    <div class="letter-card">
-      <p class="letter-text">
-        أردت فقط أن أخبرك كم أنا محظوظ بوجودك في حياتي.
-        أنتِ النور الذي يضيء أيامي، والابتسامة التي تملأ قلبي بالسعادة.
-        كل لحظة أقضيها معك هي كنز لا يُقدَّر بثمن.
-        أتمنى أن تبقى حياتنا مليئةً بالحب والفرح إلى الأبد.
-      </p>
-      <div class="letter-sig">
-        <div class="sig-dot">م</div>
-        <div class="sig-text">
-          <strong>محمد</strong>
-          حبيبك للأبد
+        <div class="letter-card">
+            <p class="letter-text">
+                أردت فقط أن أخبرك كم أنا محظوظ بوجودك في حياتي.
+                أنتِ النور الذي يضيء أيامي، والابتسامة التي تملأ قلبي بالسعادة.
+                كل لحظة أقضيها معك هي كنز لا يُقدَّر بثمن.
+                أتمنى أن تبقى حياتنا مليئةً بالحب والفرح إلى الأبد.
+            </p>
+            <div class="letter-sig">
+                <div class="sig-dot">م</div>
+                <div class="sig-text">
+                    <strong>محمد</strong>
+                    حبيبك للأبد
+                </div>
+            </div>
         </div>
-      </div>
+
+        <button class="celebrate-btn" id="celebrate-btn">
+            اضغطي هنا 💕
+        </button>
+
+        <div class="scroll-hint">اكتشفي المزيد بالأسفل</div>
+    </section>
+
+    <!-- ═══════════════ ACTIVITIES ═══════════════ -->
+    <div class="section-header">
+        <div class="section-label">أنشطة رومانسية</div>
+        <h2 class="section-title">خاصة لرحمة فقط 🌹</h2>
     </div>
 
-    <button class="celebrate-btn" id="celebrate-btn">
-      اضغطي هنا 💕
-    </button>
+    <section class="activities-section">
+        <div class="activity-grid">
 
-    <div class="scroll-hint">اكتشفي المزيد بالأسفل</div>
-  </section>
+            <a href="pages/messages.html" class="activity-card activity-card--wide">
+                <span class="card-icon">💌</span>
+                <div class="card-title">رسائل الحب</div>
+                <div class="card-desc">رسائل رومانسية كتبتها لكِ من القلب</div>
+                <div class="card-arrow">← اقرئي</div>
+            </a>
 
-  <!-- ═══════════════ ACTIVITIES ═══════════════ -->
-  <div class="section-header">
-    <div class="section-label">أنشطة رومانسية</div>
-    <h2 class="section-title">خاصة لرحمة فقط 🌹</h2>
-  </div>
+            <a href="pages/memories.html" class="activity-card">
+                <span class="card-icon">💖</span>
+                <div class="card-title">ذكرياتنا</div>
+                <div class="card-desc">أجمل اللحظات التي جمعتنا معاً</div>
+                <div class="card-arrow">← استعيدي</div>
+            </a>
 
-  <section class="activities-section">
-    <div class="activity-grid">
+            <a href="games/quiz.html" class="activity-card">
+                <span class="card-icon">🤔</span>
+                <div class="card-title">لعبة الأسئلة</div>
+                <div class="card-desc">اختبري معلوماتك عني</div>
+                <div class="card-arrow">← العبي</div>
+            </a>
 
-      <a href="pages/messages.html" class="activity-card activity-card--wide">
-        <span class="card-icon">💌</span>
-        <div class="card-title">رسائل الحب</div>
-        <div class="card-desc">رسائل رومانسية كتبتها لكِ من القلب</div>
-        <div class="card-arrow">← اقرئي</div>
-      </a>
+            <a href="games/catch-me.html" class="activity-card">
+                <span class="card-icon">🏃‍♂️</span>
+                <div class="card-title">أمسكني لو تقدري</div>
+                <div class="card-desc">لعبة سريعة ومسلية</div>
+                <div class="card-arrow">← تحدي</div>
+            </a>
 
-      <a href="pages/memories.html" class="activity-card">
-        <span class="card-icon">💖</span>
-        <div class="card-title">ذكرياتنا</div>
-        <div class="card-desc">أجمل اللحظات التي جمعتنا معاً</div>
-        <div class="card-arrow">← استعيدي</div>
-      </a>
+            <a href="games/heart-catcher.html" class="activity-card">
+                <span class="card-icon">💘</span>
+                <div class="card-title">صائد القلوب</div>
+                <div class="card-desc">اجمعي أكبر عدد من القلوب</div>
+                <div class="card-arrow">← اجمعي</div>
+            </a>
 
-      <a href="games/quiz.html" class="activity-card">
-        <span class="card-icon">🤔</span>
-        <div class="card-title">لعبة الأسئلة</div>
-        <div class="card-desc">اختبري معلوماتك عني</div>
-        <div class="card-arrow">← العبي</div>
-      </a>
+        </div>
+    </section>
 
-      <a href="games/catch-me.html" class="activity-card">
-        <span class="card-icon">🏃‍♂️</span>
-        <div class="card-title">أمسكني لو تقدري</div>
-        <div class="card-desc">لعبة سريعة ومسلية</div>
-        <div class="card-arrow">← تحدي</div>
-      </a>
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <footer>
+        صُنع بكل <span>❤️</span> لأجلك يا رحمة
+    </footer>
 
-      <a href="games/heart-catcher.html" class="activity-card">
-        <span class="card-icon">💘</span>
-        <div class="card-title">صائد القلوب</div>
-        <div class="card-desc">اجمعي أكبر عدد من القلوب</div>
-        <div class="card-arrow">← اجمعي</div>
-      </a>
+    <script>
+        // ─── Floating hearts on celebrate button ───
+        document.getElementById('celebrate-btn').addEventListener('click', function (e) {
+            const count = 18;
+            const emojis = ['❤️', '💕', '💖', '💗', '💓', '💞', '🌹'];
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.className = 'float-heart';
+                    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    el.style.left = Math.random() * 95 + 'vw';
+                    el.style.bottom = '10vh';
+                    el.style.fontSize = (1.2 + Math.random() * 1.4) + 'rem';
+                    el.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+                    document.body.appendChild(el);
+                    el.addEventListener('animationend', () => el.remove());
+                }, i * 90);
+            }
+        });
 
-    </div>
-  </section>
-
-  <!-- ═══════════════ FOOTER ═══════════════ -->
-  <footer>
-    صُنع بكل <span>❤️</span> لأجلك يا رحمة
-  </footer>
-
-  <script>
-    // ─── Floating hearts on celebrate button ───
-    document.getElementById('celebrate-btn').addEventListener('click', function(e) {
-      const count = 18;
-      const emojis = ['❤️','💕','💖','💗','💓','💞','🌹'];
-      for (let i = 0; i < count; i++) {
-        setTimeout(() => {
-          const el = document.createElement('div');
-          el.className = 'float-heart';
-          el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-          el.style.left  = Math.random() * 95 + 'vw';
-          el.style.bottom = '10vh';
-          el.style.fontSize = (1.2 + Math.random() * 1.4) + 'rem';
-          el.style.animationDuration = (2.5 + Math.random() * 2) + 's';
-          document.body.appendChild(el);
-          el.addEventListener('animationend', () => el.remove());
-        }, i * 90);
-      }
-    });
-
-    // ─── Subtle entrance for activity cards ───
-    const cards = document.querySelectorAll('.activity-card');
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          e.target.style.animation = `fadeUp .55s ${i * 0.1}s both`;
-          e.target.style.opacity = '0';
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    cards.forEach(c => io.observe(c));
-  </script>
+        // ─── Subtle entrance for activity cards ───
+        const cards = document.querySelectorAll('.activity-card');
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting) {
+                    e.target.style.animation = `fadeUp .55s ${i * 0.1}s both`;
+                    e.target.style.opacity = '0';
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        cards.forEach(c => io.observe(c));
+    </script>
 </body>
+
 </html>
