@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💖 صائد القلوب - رحمة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .game-menu {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0,0,0,0.4);
+            padding: 30px;
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255,255,255,0.3);
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .logo {
+            font-size: 3rem;
+            animation: heartBeat 1.5s ease-in-out infinite;
+            margin-bottom: 10px;
+        }
+        
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .game-menu h1 {
+            font-size: 2.2rem;
+            margin: 15px 0;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+        
+        .instructions {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: right;
+        }
+        
+        .instructions h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        
+        .instruction-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        
+        .start-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+        }
+        
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
+        
+        .game-screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .game-hud {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .hud-left, .hud-right {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .hud-item {
+            background: rgba(0,0,0,0.6);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 70px;
+            justify-content: center;
+        }
+        
+        .timer-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.6);
+            border: 3px solid #ffd700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
+        }
+        
+        .pause-btn {
+            background: rgba(0,0,0,0.6);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .progress-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            height: 8px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        #catcher-area {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .falling-heart {
+            position: absolute;
+            font-size: 2.2rem;
+            cursor: pointer;
+            user-select: none;
+            z-index: 10;
+            transition: transform 0.1s ease;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+        }
+        
+        .falling-heart:hover {
+            transform: scale(1.2);
+        }
+        
+        .falling-heart:active {
+            transform: scale(0.8);
+        }
+        
+        .power-up {
+            animation: powerPulse 1s infinite;
+            filter: drop-shadow(0 0 15px cyan);
+        }
+        
+        @keyframes powerPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+        }
+        
+        @keyframes sparkle {
+            0% { filter: drop-shadow(0 0 10px gold) hue-rotate(0deg); }
+            100% { filter: drop-shadow(0 0 20px gold) hue-rotate(360deg); }
+        }
+        
+        @keyframes scorePopup {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-60px) scale(1.8); }
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            20%, 80% { opacity: 1; }
+        }
+        
+        .pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .pause-content {
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(15px);
+        }
+        
+        .pause-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .game-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 480px) {
+            .game-menu {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            .game-menu h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .falling-heart {
+                font-size: 1.8rem;
+            }
+            
+            .hud-item {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .timer-circle {
+                width: 60px;
+                height: 60px;
+                font-size: 1.3rem;
+            }
+            
+            .progress-bar {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="game-menu" class="game-menu">
+            <div class="logo">💖</div>
+            <h1>صائد القلوب</h1>
+            <p>لعبة مخصصة لرحمة من محمد ❤️</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">أعلى نقاط</div>
+                    <div class="stat-value" id="best-score">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">أعلى مستوى</div>
+                    <div class="stat-value" id="best-level">1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">مجموع اللعبات</div>
+                    <div class="stat-value" id="total-games">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">آخر لعبة</div>
+                    <div class="stat-value" id="last-played">-</div>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3>🎯 قواعد اللعب:</h3>
+                <div class="instruction-item">
+                    <span>❤️</span>
+                    <span>قلب عادي = 1 نقطة</span>
+                </div>
+                <div class="instruction-item">
+                    <span>💖</span>
+                    <span>قلب ملون = 3 نقاط</span>
+                </div>
+                <div class="instruction-item">
+                    <span>⭐</span>
+                    <span>نجمة = قوة خاصة</span>
+                </div>
+                <div class="instruction-item">
+                    <span>🔥</span>
+                    <span>كومبو 5+ = مضاعفة</span>
+                </div>
+            </div>
+            
+            <button id="start-btn" class="start-btn">🎮 ابدأ اللعبة</button>
+            <a href="../index.html" class="back-btn">← العودة للرئيسية</a>
+        </div>
+        
+        <div id="game-screen" class="game-screen hidden">
+            <div class="game-hud">
+                <div class="hud-left">
+                    <div class="hud-item">
+                        <span>🏆</span>
+                        <span id="score">0</span>
+                    </div>
+                    <div class="hud-item">
+                        <span>🎯</span>
+                        <span id="level">1</span>
+                    </div>
+                </div>
+                
+                <div class="timer-circle">
+                    <span id="timer">30</span>
+                </div>
+                
+                <div class="hud-right">
+                    <div class="hud-item">
+                        <span>🔥</span>
+                        <span id="combo">0</span>
+                    </div>
+                    <button id="pause-btn" class="pause-btn">⏸️</button>
+                </div>
+            </div>
+            
+            <div id="catcher-area"></div>
+            
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+                <span class="progress-text">المستوى التالي</span>
+            </div>
+        </div>
+        
+        <div id="pause-menu" class="pause-overlay hidden">
+            <div class="pause-content">
+                <h2>متوقف مؤقتاً</h2>
+                <div style="margin: 20px 0;">
+                    <p>النقاط: <span id="pause-score">0</span></p>
+                    <p>المستوى: <span id="pause-level">1</span></p>
+                    <p>الكومبو: <span id="pause-combo">0</span></p>
+                </div>
+                <div class="pause-buttons">
+                    <button id="resume-btn" class="game-btn">▶️ متابعة</button>
+                    <button id="restart-btn" class="game-btn">🔄 إعادة بدء</button>
+                    <button id="quit-btn" class="game-btn">🚪 خروج</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let gameState = {
+            score: 0,
+            timeLeft: 30,
+            level: 1,
+            combo: 0,
+            maxCombo: 0,
+            gameActive: false,
+            isPaused: false
+        };
+        
+        let gameInterval, heartInterval, powerUpInterval;
+        let powerUps = ['⭐', '🌟', '✨', '🔥', '⚡'];
+        
+        // تحميل البيانات
+        function loadData() {
+            const data = JSON.parse(localStorage.getItem('heartCatcherGame') || '{}');
+            document.getElementById('best-score').textContent = data.bestScore || 0;
+            document.getElementById('best-level').textContent = data.bestLevel || 1;
+            document.getElementById('total-games').textContent = data.totalGames || 0;
+            
+            if (data.lastPlayed) {
+                const date = new Date(data.lastPlayed);
+                const today = new Date();
+                const diffDays = Math.floor((today - date) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 0) {
+                    document.getElementById('last-played').textContent = 'اليوم';
+                } else if (diffDays === 1) {
+                    document.getElementById('last-played').textContent = 'أمس';
+                } else {
+                    document.getElementById('last-played').textContent = diffDays + ' أيام';
+                }
+            }
+        }
+        
+        // حفظ البيانات
+        function saveData() {
+            const data = JSON.parse(localStorage.getItem('heartCatcherGame') || '{}');
+            data.bestScore = Math.max(data.bestScore || 0, gameState.score);
+            data.bestLevel = Math.max(data.bestLevel || 1, gameState.level);
+            data.totalGames = (data.totalGames || 0) + 1;
+            data.lastPlayed = new Date().toISOString();
+            localStorage.setItem('heartCatcherGame', JSON.stringify(data));
+        }
+        
+        // بدء اللعبة
+        function startGame() {
+            document.getElementById('game-menu').style.display = 'none';
+            document.getElementById('game-screen').classList.remove('hidden');
+            
+            gameState = { score: 0, timeLeft: 30, level: 1, combo: 0, maxCombo: 0, gameActive: true, isPaused: false };
+            updateDisplay();
+            updateProgress();
+            
+            gameInterval = setInterval(updateTimer, 1000);
+            heartInterval = setInterval(createHeart, 1000);
+            powerUpInterval = setInterval(createPowerUp, 8000);
+        }
+        
+        // إنشاء قلب
+        function createHeart() {
+            if (!gameState.gameActive || gameState.isPaused) return;
+            
+            const heart = document.createElement('div');
+            const isSpecial = Math.random() < 0.25;
+            heart.innerHTML = isSpecial ? '💖' : '❤️';
+            heart.className = 'falling-heart';
+            heart.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+            heart.style.top = '-60px';
+            
+            const value = isSpecial ? 3 : 1;
+            heart.dataset.value = value;
+            
+            if (isSpecial) {
+                heart.style.animation = 'sparkle 0.8s infinite alternate';
+            }
+            
+            heart.onclick = function() {
+                const points = value * (gameState.combo >= 5 ? 2 : 1);
+                gameState.score += points;
+                gameState.combo++;
+                
+                if (gameState.combo > gameState.maxCombo) {
+                    gameState.maxCombo = gameState.combo;
+                }
+                
+                updateDisplay();
+                createScoreEffect(heart, points);
+                heart.remove();
+                
+                if (gameState.score >= gameState.level * 30) {
+                    levelUp();
+                }
+                
+                updateProgress();
+            };
+            
+            document.getElementById('catcher-area').appendChild(heart);
+            animateHeart(heart);
+        }
+        
+        // إنشاء قوة خاصة
+        function createPowerUp() {
+            if (!gameState.gameActive || gameState.isPaused || Math.random() > 0.6) return;
+            
+            const powerUp = document.createElement('div');
+            const type = powerUps[Math.floor(Math.random() * powerUps.length)];
+            powerUp.innerHTML = type;
+            powerUp.className = 'falling-heart power-up';
+            powerUp.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+            powerUp.style.top = '-60px';
+            powerUp.style.fontSize = '2.5rem';
+            
+            powerUp.onclick = function() {
+                activatePowerUp(type);
+                powerUp.remove();
+            };
+            
+            document.getElementById('catcher-area').appendChild(powerUp);
+            animateHeart(powerUp);
+        }
+        
+        // تفعيل القوة الخاصة
+        function activatePowerUp(type) {
+            let message = '';
+            switch(type) {
+                case '⭐':
+                case '🌟':
+                    message = 'إبطاء الوقت! ⏰';
+                    break;
+                case '✨':
+                    gameState.timeLeft += 8;
+                    message = 'وقت إضافي! ⏱️';
+                    break;
+                case '🔥':
+                    gameState.combo += 3;
+                    message = 'كومبو مجاني! 🔥';
+                    break;
+                case '⚡':
+                    gameState.score += 10;
+                    message = 'نقاط مجانية! ⚡';
+                    break;
+            }
+            showPowerMessage(message);
+            updateDisplay();
+        }
+        
+        // عرض رسالة القوة
+        function showPowerMessage(message) {
+            const msg = document.createElement('div');
+            msg.textContent = message;
+            msg.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                color: white;
+                padding: 20px 40px;
+                border-radius: 30px;
+                font-size: 1.5rem;
+                font-weight: bold;
+                z-index: 2000;
+                animation: fadeInOut 2.5s forwards;
+                pointer-events: none;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            `;
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 2500);
+        }
+        
+        // تأثير النقاط
+        function createScoreEffect(heart, points) {
+            const effect = document.createElement('div');
+            effect.innerHTML = '+' + points;
+            effect.style.cssText = `
+                position: fixed;
+                left: ${heart.offsetLeft + 20}px;
+                top: ${heart.offsetTop + 20}px;
+                color: #ffd700;
+                font-size: 2rem;
+                font-weight: bold;
+                pointer-events: none;
+                animation: scorePopup 1.2s forwards;
+                z-index: 1500;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            `;
+            document.body.appendChild(effect);
+            setTimeout(() => effect.remove(), 1200);
+        }
+        
+        // حركة القلب
+        function animateHeart(heart) {
+            let pos = -60;
+            const speed = 2 + gameState.level * 0.3;
+            
+            const move = () => {
+                if (!gameState.gameActive || gameState.isPaused || !heart.parentNode) return;
+                
+                pos += speed;
+                heart.style.top = pos + 'px';
+                
+                if (pos > window.innerHeight) {
+                    heart.remove();
+                    if (heart.dataset.value) {
+                        gameState.combo = 0;
+                        updateDisplay();
+                    }
+                    return;
+                }
+                
+                requestAnimationFrame(move);
+            };
+            
+            requestAnimationFrame(move);
+        }
+        
+        // رفع المستوى
+        function levelUp() {
+            gameState.level++;
+            updateDisplay();
+            showPowerMessage(`المستوى ${gameState.level}! 🎉`);
+            
+            clearInterval(heartInterval);
+            heartInterval = setInterval(createHeart, Math.max(600, 1000 - gameState.level * 50));
+        }
+        
+        // تحديث العرض
+        function updateDisplay() {
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('timer').textContent = gameState.timeLeft;
+            document.getElementById('level').textContent = gameState.level;
+            document.getElementById('combo').textContent = gameState.combo;
+        }
+        
+        // تحديث شريط التقدم
+        function updateProgress() {
+            const progress = (gameState.score % (gameState.level * 30)) / (gameState.level * 30) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+        
+        // تحديث المؤقت
+        function updateTimer() {
+            gameState.timeLeft--;
+            updateDisplay();
+            
+            if (gameState.timeLeft <= 5) {
+                document.querySelector('.timer-circle').style.animation = 'heartBeat 0.5s infinite';
+            }
+            
+            if (gameState.timeLeft <= 0) {
+                endGame();
+            }
+        }
+        
+        // إيقاف مؤقت
+        function pauseGame() {
+            if (!gameState.gameActive || gameState.isPaused) return;
+            
+            gameState.isPaused = true;
+            clearInterval(gameInterval);
+            clearInterval(heartInterval);
+            clearInterval(powerUpInterval);
+            
+            document.getElementById('pause-score').textContent = gameState.score;
+            document.getElementById('pause-level').textContent = gameState.level;
+            document.getElementById('pause-combo').textContent = gameState.combo;
+            
+            document.getElementById('pause-menu').classList.remove('hidden');
+        }
+        
+        // متابعة اللعبة
+        function resumeGame() {
+            gameState.isPaused = false;
+            document.getElementById('pause-menu').classList.add('hidden');
+            
+            gameInterval = setInterval(updateTimer, 1000);
+            heartInterval = setInterval(createHeart, Math.max(600, 1000 - gameState.level * 50));
+            powerUpInterval = setInterval(createPowerUp, 8000);
+        }
+        
+        // إعادة بدء
+        function restartGame() {
+            document.getElementById('pause-menu').classList.add('hidden');
+            clearAllIntervals();
+            clearHearts();
+            startGame();
+        }
+        
+        // خروج
+        function quitGame() {
+            document.getElementById('pause-menu').classList.add('hidden');
+            endGame();
+        }
+        
+        // مسح الفواصل
+        function clearAllIntervals() {
+            clearInterval(gameInterval);
+            clearInterval(heartInterval);
+            clearInterval(powerUpInterval);
+        }
+        
+        // مسح القلوب
+        function clearHearts() {
+            document.querySelectorAll('.falling-heart').forEach(h => h.remove());
+        }
+        
+        // انتهاء اللعبة
+        function endGame() {
+            gameState.gameActive = false;
+            clearAllIntervals();
+            clearHearts();
+            saveData();
+            
+            let message = '', rank = '';
+            if (gameState.score >= 300) {
+                message = 'أسطورة! إنتِ ملكة القلوب! 👑';
+                rank = 'ملكة القلوب';
+            } else if (gameState.score >= 200) {
+                message = 'ممتاز جداً! صائدة قلوب محترفة! 🏆';
+                rank = 'محترفة';
+            } else if (gameState.score >= 120) {
+                message = 'رائع! إنتِ صائدة قلوب ماهرة! 💖';
+                rank = 'ماهرة';
+            } else if (gameState.score >= 60) {
+                message = 'جيد جداً! 💕';
+                rank = 'مبتدئة متقدمة';
+            } else {
+                message = 'حاولي تاني! 💔';
+                rank = 'مبتدئة';
+            }
+            
+            document.getElementById('catcher-area').innerHTML = `
+                <div style="
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    text-align: center;
+                    background: rgba(0,0,0,0.9);
+                    padding: 40px;
+                    border-radius: 25px;
+                    backdrop-filter: blur(15px);
+                    border: 2px solid rgba(255,255,255,0.3);
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+                    width: 90%;
+                    max-width: 400px;
+                ">
+                    <h3 style="font-size: 2.2rem; margin-bottom: 20px; color: #ffd700;">🎮 انتهت اللعبة!</h3>
+                    <div style="
+                        background: rgba(255,255,255,0.1);
+                        padding: 25px;
+                        border-radius: 15px;
+                        margin: 25px 0;
+                        border: 1px solid rgba(255,255,255,0.2);
+                    ">
+                        <p style="margin: 12px 0; font-size: 1.2rem;"><strong>🏆 النقاط:</strong> ${gameState.score}</p>
+                        <p style="margin: 12px 0; font-size: 1.2rem;"><strong>🎯 المستوى:</strong> ${gameState.level}</p>
+                        <p style="margin: 12px 0; font-size: 1.2rem;"><strong>🔥 أعلى كومبو:</strong> ${gameState.maxCombo}</p>
+                        <p style="margin: 12px 0; font-size: 1.2rem;"><strong>👑 الرتبة:</strong> ${rank}</p>
+                    </div>
+                    <p style="
+                        font-size: 1.4rem;
+                        font-weight: bold;
+                        margin: 25px 0;
+                        color: #4ecdc4;
+                        text-shadow: 0 0 15px rgba(78,205,196,0.5);
+                    ">${message}</p>
+                    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
+                        <button onclick="location.reload()" style="
+                            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            font-size: 1.1rem;
+                            border-radius: 25px;
+                            cursor: pointer;
+                            font-weight: bold;
+                            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                        ">🔄 العب تاني</button>
+                        <button onclick="shareScore()" style="
+                            background: linear-gradient(45deg, #25D366, #128C7E);
+                            color: white;
+                            border: none;
+                            padding: 15px 30px;
+                            font-size: 1.1rem;
+                            border-radius: 25px;
+                            cursor: pointer;
+                            font-weight: bold;
+                            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                        ">📱 شارك النتيجة</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // مشاركة النتيجة
+        function shareScore() {
+            const text = `🎮 حققت ${gameState.score} نقطة في لعبة صائد القلوب!\n🎯 المستوى ${gameState.level} - 🔥 أعلى كومبو ${gameState.maxCombo}\n\n💕 لعبة مخصصة لرحمة من محمد`;
+            
+            if (navigator.share) {
+                navigator.share({ title: '💖 لعبة صائد القلوب', text: text });
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showPowerMessage('تم نسخ النتيجة! 📋');
+                });
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showPowerMessage('تم نسخ النتيجة! 📋');
+            }
+        }
+        
+        // بدء التطبيق
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            document.getElementById('start-btn').onclick = startGame;
+            document.getElementById('pause-btn').onclick = pauseGame;
+            document.getElementById('resume-btn').onclick = resumeGame;
+            document.getElementById('restart-btn').onclick = restartGame;
+            document.getElementById('quit-btn').onclick = quitGame;
+        });
+    </script>
+</body>
+</html>
