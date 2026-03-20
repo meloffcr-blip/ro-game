@@ -1,286 +1,529 @@
-const $ = id => document.getElementById(id);
-const isMobile = ('ontouchstart' in window) || window.matchMedia('(hover:none)').matches;
+/**
+ * ════════════════════════════════════════
+ *  heart-catcher.js — صائد القلوب
+ *  Object Pool · Combos · Levels · Power-ups
+ * ════════════════════════════════════════
+ */
 
-/* ── CURSOR ── */
-let cx = -100, cy = -100, tx = -100, ty = -100;
-const dot = document.getElementById('cur-dot'), ring = document.getElementById('cur-ring');
+const HeartCatcherGame = (() => {
 
-if (!isMobile) {
-    document.addEventListener('mousemove', e => {
-        cx = e.clientX; cy = e.clientY;
-        dot.style.left = cx + 'px'; dot.style.top = cy + 'px';
+  // ─── Config ───
+  const CFG = {
+    totalTime:    window.APP_CONFIG?.heartCatcher?.totalTime ?? 60,
+    spawnBase:    1400,    // ms بين كل قلب في البداية
+    spawnMin:     420,     // أسرع spawn ممكن
+    fallBase:     3200,    // ms لأول لمس الأرض
+    fallMin:      1400,
+    poolSize:     50,
+    comboWindow:  1200,    // ms بين الكليك للكومبو
+    levelEvery:   8,       // نقطة كل كام تعلي level
+  };
+
+  // ─── State ───
+  let state = {
+    phase:      'menu',    // menu | playing | paused | result
+    score:      0,
+    combo:      0,
+    maxCombo:   0,
+    level:      1,
+    timeLeft:   CFG.totalTime,
+    caught:     0,
+    missed:     0,
+    lastCatch:  0,
+    highScore:  0,
+    shieldActive: false,
+    doubleActive: false,
+  };
+
+  // ─── Timers ───
+  let _countdownTimer = null;
+  let _spawnTimer     = null;
+  let _spawnInterval  = CFG.spawnBase;
+
+  // ─── Heart Pool ───
+  const _pool    = [];
+  let   _arena   = null;
+
+  // ─── DOM refs ───
+  let _dom = {};
+
+  // Heart definitions: emoji, points, probability weight, special
+  const HEARTS = [
+    { e: '❤️',  pts: 1,  w: 40, type: 'normal'  },
+    { e: '💕',  pts: 1,  w: 25, type: 'normal'  },
+    { e: '💖',  pts: 2,  w: 15, type: 'normal'  },
+    { e: '💗',  pts: 2,  w: 10, type: 'normal'  },
+    { e: '💘',  pts: 3,  w: 5,  type: 'special' },
+    { e: '🌹',  pts: 3,  w: 3,  type: 'special' },
+    { e: '⭐',  pts: 0,  w: 1,  type: 'shield'  },  // shield power-up
+    { e: '✨',  pts: 0,  w: 1,  type: 'double'  },  // double points power-up
+  ];
+  const _totalWeight = HEARTS.reduce((s, h) => s + h.w, 0);
+
+  // ─── Init ───
+  function init() {
+    _dom = {
+      menu:       document.getElementById('menu'),
+      gameScreen: document.getElementById('game-screen'),
+      pauseOv:    document.getElementById('pause-overlay'),
+      resultBox:  document.getElementById('result-box'),
+      arena:      document.getElementById('arena'),
+      startBtn:   document.querySelector('.start-btn'),
+      pauseBtn:   document.getElementById('pause-btn'),
+      resumeBtn:  document.getElementById('resume-btn'),
+      restartBtn: document.getElementById('restart-btn'),
+      homeBtn:    document.getElementById('home-btn'),
+      playAgain:  document.getElementById('play-again-btn'),
+      scoreEl:    document.getElementById('score-val'),
+      comboEl:    document.getElementById('combo-val'),
+      levelEl:    document.getElementById('level-val'),
+      timerEl:    document.getElementById('timer-val'),
+      progFill:   document.getElementById('prog-fill'),
+      progLabel:  document.getElementById('prog-label'),
+      // menu stats
+      menuHS:     document.getElementById('menu-high-score'),
+      menuMaxC:   document.getElementById('menu-max-combo'),
+      // result
+      resScore:   document.getElementById('res-score'),
+      resCaught:  document.getElementById('res-caught'),
+      resMissed:  document.getElementById('res-missed'),
+      resCombo:   document.getElementById('res-combo'),
+      resMsg:     document.getElementById('res-msg'),
+      resNewRec:  document.getElementById('res-new-record'),
+      touchHint:  document.getElementById('touch-hint'),
+    };
+
+    _arena = _dom.arena;
+
+    // load saved stats
+    state.highScore = _load('hc_high_score', 0);
+    const savedMaxCombo = _load('hc_max_combo', 0);
+    if (_dom.menuHS)   _dom.menuHS.textContent  = state.highScore;
+    if (_dom.menuMaxC) _dom.menuMaxC.textContent = savedMaxCombo;
+
+    // build pool
+    _buildPool();
+
+    // bind buttons
+    _dom.startBtn?.addEventListener('click',   startGame);
+    _dom.pauseBtn?.addEventListener('click',   pauseGame);
+    _dom.resumeBtn?.addEventListener('click',  resumeGame);
+    _dom.restartBtn?.addEventListener('click', () => { resumeGame(); startGame(); });
+    _dom.homeBtn?.addEventListener('click',    _goHome);
+    _dom.playAgain?.addEventListener('click',  () => { _hideResult(); startGame(); });
+
+    // keyboard
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' || e.key === 'p') {
+        if (state.phase === 'playing') pauseGame();
+        else if (state.phase === 'paused') resumeGame();
+      }
     });
-    (function loop() {
-        tx += (cx - tx) * .13; ty += (cy - ty) * .13;
-        ring.style.left = tx + 'px'; ring.style.top = ty + 'px';
-        requestAnimationFrame(loop);
-    })();
+  }
 
-    setInterval(() => {
-        if (!gs.gameActive) return;
-        let near = false;
-        document.querySelectorAll('.fheart').forEach(h => {
-            const r = h.getBoundingClientRect();
-            const dist = Math.hypot(cx - (r.left + r.width / 2), cy - (r.top + r.height / 2));
-            h.classList.toggle('near', dist < 90);
-            if (dist < 90) near = true;
-        });
-        dot.classList.toggle('attract', near);
-        ring.classList.toggle('attract', near);
-    }, 40);
-}
-
-/* ── STATE ── */
-let gs = {};
-let timerId, heartId, powerUpId;
-
-/* ── STORAGE ── */
-function loadData() {
-    const d = JSON.parse(localStorage.getItem('hcg2') || '{}');
-    $('best-score').textContent = d.best || 0;
-    $('best-level').textContent = d.lvl || 1;
-    $('total-games').textContent = d.total || 0;
-    if (d.ts) {
-        const diff = Math.floor((Date.now() - d.ts) / 86400000);
-        $('last-played').textContent = diff === 0 ? 'اليوم' : diff === 1 ? 'أمس' : diff + ' أيام';
+  // ─── Pool ───
+  function _buildPool() {
+    for (let i = 0; i < CFG.poolSize; i++) {
+      const el = document.createElement('div');
+      el.className = 'fheart';
+      el.style.display = 'none';
+      el.style.willChange = 'top, transform';
+      el.addEventListener('click',      _onHeartClick);
+      el.addEventListener('touchstart', _onHeartClick, { passive: true });
+      _arena?.appendChild(el);
+      _pool.push({ el, active: false, def: null, timer: null });
     }
-}
-function saveData() {
-    const d = JSON.parse(localStorage.getItem('hcg2') || '{}');
-    d.best = Math.max(d.best || 0, gs.score);
-    d.lvl = Math.max(d.lvl || 1, gs.level);
-    d.total = (d.total || 0) + 1; d.ts = Date.now();
-    localStorage.setItem('hcg2', JSON.stringify(d));
-}
+  }
 
-/* ── START ── */
-function hInterval() { return Math.max(520, 1060 - gs.level * 58); }
-function startGame() {
-    $('menu').style.display = 'none';
-    $('game-screen').style.display = 'block';
-    const rb = $('result-box'); if (rb) rb.remove();
-    $('timer-ring').classList.remove('urgent');
-    gs = { score: 0, timeLeft: 30, level: 1, combo: 0, maxCombo: 0, gameActive: true, isPaused: false };
-    updateHUD(); updateProg();
-    timerId = setInterval(tick, 1000);
-    heartId = setInterval(spawnHeart, hInterval());
-    powerUpId = setInterval(spawnPowerUp, 9000);
-}
+  function _acquireHeart() {
+    return _pool.find(h => !h.active) ?? null;
+  }
 
-/* ── HEARTS ── */
-function spawnHeart() {
-    if (!gs.gameActive || gs.isPaused) return;
-    const special = Math.random() < 0.25;
-    const h = document.createElement('div');
-    h.className = 'fheart' + (special ? ' special' : '');
-    h.textContent = special ? '💖' : '❤️';
-    h.dataset.val = special ? 3 : 1;
-    h.style.left = Math.random() * (window.innerWidth - 55) + 'px';
-    h.addEventListener('touchstart', e => { e.preventDefault(); collectHeart(h); }, { passive: false });
-    h.addEventListener('click', () => collectHeart(h));
-    $('arena').appendChild(h); fall(h);
-}
+  function _releaseHeart(h) {
+    clearTimeout(h.timer);
+    h.active  = false;
+    h.def     = null;
+    h.el.style.display     = 'none';
+    h.el.style.top         = '-70px';
+    h.el.style.left        = '';
+    h.el.style.transition  = '';
+    h.el.style.animation   = '';
+    h.el.classList.remove('special', 'near', 'popped', 'powerup');
+    h.el.removeAttribute('data-id');
+  }
 
-const PUPS = ['⭐', '🌟', '✨', '🔥', '⚡'];
-function spawnPowerUp() {
-    if (!gs.gameActive || gs.isPaused || Math.random() > .58) return;
-    const type = PUPS[Math.floor(Math.random() * PUPS.length)];
-    const p = document.createElement('div');
-    p.className = 'fheart powerup'; p.textContent = type;
-    p.style.left = Math.random() * (window.innerWidth - 55) + 'px';
-    p.style.fontSize = '2.6rem';
-    p.addEventListener('touchstart', e => { e.preventDefault(); collectPowerUp(p, type); }, { passive: false });
-    p.addEventListener('click', () => collectPowerUp(p, type));
-    $('arena').appendChild(p); fall(p);
-}
-
-/* ── FALL ── */
-function fall(el) {
-    let pos = -70;
-    const spd = 1.8 + gs.level * .28;
-    const startX = parseFloat(el.style.left);
-    const phase = Math.random() * Math.PI * 2;
-    const amp = isMobile ? 8 : 12;
-
-    function step() {
-        if (!el.parentNode) return;
-        if (gs.isPaused) { requestAnimationFrame(step); return; }
-        pos += spd;
-        el.style.top = pos + 'px';
-        el.style.left = (startX + Math.sin(pos * .018 + phase) * amp) + 'px';
-        if (pos > window.innerHeight + 20) {
-            el.remove();
-            if (el.dataset.val) { gs.combo = 0; updateHUD(); }
-            return;
-        }
-        requestAnimationFrame(step);
+  // ─── Weighted random heart ───
+  function _pickHeart() {
+    let r = Math.random() * _totalWeight;
+    for (const h of HEARTS) {
+      r -= h.w;
+      if (r <= 0) return h;
     }
-    requestAnimationFrame(step);
-}
+    return HEARTS[0];
+  }
 
-/* ── COLLECT ── */
-function collectHeart(h) {
-    if (!h.parentNode || !gs.gameActive) return;
-    const val = parseInt(h.dataset.val);
-    const multi = gs.combo >= 5 ? 2 : 1;
-    const pts = val * multi;
-    gs.score += pts; gs.combo++;
-    if (gs.combo > gs.maxCombo) gs.maxCombo = gs.combo;
+  // ─── Start ───
+  function startGame() {
+    _resetState();
+    _showScreen('game');
+    _updateHUD();
 
-    const r = h.getBoundingClientRect();
-    const px = r.left + r.width / 2, py = r.top + r.height / 2;
-    h.classList.add('popped');
-    setTimeout(() => h.remove(), 80);
+    _spawnInterval = CFG.spawnBase;
+    _scheduleSpawn();
 
-    spawnScorePop(px, py, '+' + pts, val > 1 ? '#e8556d' : '#c03558');
-    spawnParticles(px, py);
-    if (gs.combo % 5 === 0 && gs.combo > 0) spawnComboBurst(px, py);
+    _countdownTimer = setInterval(_tick, 1000);
 
-    updateHUD();
-    if (gs.score >= gs.level * 30) levelUp();
-    updateProg();
-}
-
-function collectPowerUp(p, type) {
-    if (!p.parentNode) return; p.remove();
-    let msg = '';
-    switch (type) {
-        case '⭐': case '🌟': gs.timeLeft += 5; msg = '+5 ثواني! ⭐'; break;
-        case '✨': gs.timeLeft += 8; msg = '+8 ثواني! ✨'; break;
-        case '🔥': gs.combo += 3; msg = 'كومبو مجاني! 🔥'; break;
-        case '⚡': gs.score += 10; msg = '+10 نقاط! ⚡'; break;
+    if (_dom.touchHint) {
+      _dom.touchHint.style.opacity = '0';
+      setTimeout(() => { _dom.touchHint.style.opacity = ''; }, 100);
     }
-    showMsg(msg); updateHUD();
-}
+  }
 
-/* ── TICK ── */
-function tick() {
-    gs.timeLeft--; updateHUD();
-    if (gs.timeLeft <= 5) $('timer-ring').classList.add('urgent');
-    if (gs.timeLeft <= 0) endGame();
-}
+  function _resetState() {
+    state = {
+      ...state,
+      phase:        'playing',
+      score:        0,
+      combo:        0,
+      maxCombo:     0,
+      level:        1,
+      timeLeft:     CFG.totalTime,
+      caught:       0,
+      missed:       0,
+      lastCatch:    0,
+      shieldActive: false,
+      doubleActive: false,
+    };
+    // release all active hearts
+    _pool.forEach(h => { if (h.active) _releaseHeart(h); });
+  }
 
-function levelUp() {
-    gs.level++; updateHUD(); showMsg('المستوى ' + gs.level + '! 🎉');
-    clearInterval(heartId); heartId = setInterval(spawnHeart, hInterval());
-}
+  // ─── Countdown ───
+  function _tick() {
+    if (state.phase !== 'playing') return;
+    state.timeLeft--;
+    _updateTimer();
+    if (state.timeLeft <= 0) _endGame();
+  }
 
-/* ── HUD ── */
-function updateHUD() {
-    $('score').textContent = gs.score; $('timer').textContent = gs.timeLeft;
-    $('level').textContent = gs.level; $('combo').textContent = gs.combo;
-    $('combo-pill').classList.toggle('hot', gs.combo >= 5);
-}
-function updateProg() {
-    $('prog-fill').style.width = ((gs.score % (gs.level * 30)) / (gs.level * 30) * 100) + '%';
-}
+  // ─── Spawn ───
+  function _scheduleSpawn() {
+    if (state.phase !== 'playing') return;
+    clearTimeout(_spawnTimer);
+    _spawnTimer = setTimeout(() => {
+      _spawnHeart();
+      // gradually speed up
+      const progress = 1 - (state.timeLeft / CFG.totalTime);
+      _spawnInterval = Math.max(
+        CFG.spawnMin,
+        CFG.spawnBase - Math.floor(progress * (CFG.spawnBase - CFG.spawnMin))
+      );
+      _scheduleSpawn();
+    }, _spawnInterval + (Math.random() * 300 - 150)); // ±150ms jitter
+  }
 
-/* ── PAUSE ── */
-function pauseGame() {
-    if (!gs.gameActive || gs.isPaused) return;
-    gs.isPaused = true; clearAllIntervals();
-    $('p-score').textContent = gs.score;
-    $('p-level').textContent = gs.level;
-    $('p-combo').textContent = gs.combo;
-    $('pause-overlay').style.display = 'flex';
-}
-function resumeGame() {
-    gs.isPaused = false; $('pause-overlay').style.display = 'none';
-    timerId = setInterval(tick, 1000);
-    heartId = setInterval(spawnHeart, hInterval());
-    powerUpId = setInterval(spawnPowerUp, 9000);
-}
-function restartGame() {
-    $('pause-overlay').style.display = 'none';
-    clearAllIntervals(); clearArena();
-    const rb = $('result-box'); if (rb) rb.remove();
-    $('timer-ring').classList.remove('urgent');
-    startGame();
-}
-function quitGame() { $('pause-overlay').style.display = 'none'; endGame(); }
-function clearAllIntervals() { clearInterval(timerId); clearInterval(heartId); clearInterval(powerUpId); }
-function clearArena() { document.querySelectorAll('.fheart').forEach(h => h.remove()); }
+  function _spawnHeart() {
+    if (state.phase !== 'playing') return;
+    const slot = _acquireHeart();
+    if (!slot) return;
 
-/* ── END ── */
-function endGame() {
-    gs.gameActive = false; clearAllIntervals(); clearArena(); saveData();
-    $('timer-ring').classList.remove('urgent');
-    const s = gs.score;
-    let msg = '', emoji = '';
-    if (s >= 300)      { msg = 'أسطورة! إنتِ ملكة القلوب! 👑'; emoji = '👑'; }
-    else if (s >= 200) { msg = 'ممتاز! صائدة قلوب محترفة! 🏆'; emoji = '🏆'; }
-    else if (s >= 120) { msg = 'رائع! صائدة قلوب ماهرة! 💖'; emoji = '💖'; }
-    else if (s >= 60)  { msg = 'جيد جداً! 💕'; emoji = '💕'; }
-    else               { msg = 'حاولي تاني! بحبك محمد 💝'; emoji = '💝'; }
+    const def   = _pickHeart();
+    const arenaW = _arena.offsetWidth;
+    const size   = 44;
+    const x      = Math.random() * (arenaW - size - 20) + 10;
 
-    const box = document.createElement('div');
-    box.id = 'result-box';
-    box.innerHTML = `
-    <div style="font-size:3.5rem;margin-bottom:12px">${emoji}</div>
-    <h2>انتهت اللعبة!</h2>
-    <div class="result-stats">
-      <p>🏆 النقاط: <strong>${gs.score}</strong></p>
-      <p>🎯 المستوى: <strong>${gs.level}</strong></p>
-      <p>🔥 أعلى كومبو: <strong>${gs.maxCombo}</strong></p>
-    </div>
-    <p class="result-msg">${msg}</p>
-    <div class="result-btns">
-      <button class="pbtn" onclick="restartGame()">🔄 العب تاني</button>
-      <button class="pbtn" onclick="shareScore()">📱 شارك</button>
-      <a href="../index.html" class="pbtn ghost" style="text-decoration:none;display:inline-flex;align-items:center;">🏠 الرئيسية</a>
-    </div>
-  `;
-    $('game-screen').appendChild(box);
-}
+    // fall duration: faster on higher levels
+    const fallDur = Math.max(
+      CFG.fallMin,
+      CFG.fallBase - (state.level - 1) * 160
+    );
 
-function shareScore() {
-    const t = `💖 حققت ${gs.score} نقطة في صائد القلوب!\n🎯 المستوى ${gs.level} · 🔥 كومبو ${gs.maxCombo}\n\n💕 لعبة مخصصة لرحمة من محمد`;
-    navigator.share ? navigator.share({ title: '💖 صائد القلوب', text: t })
-        : navigator.clipboard?.writeText(t).then(() => showMsg('تم النسخ! 📋'));
-}
+    slot.active = true;
+    slot.def    = def;
 
-/* ── VISUAL FX ── */
-function spawnScorePop(x, y, text, color) {
+    const el = slot.el;
+    el.textContent   = def.e;
+    el.style.display = 'block';
+    el.style.left    = x + 'px';
+    el.style.top     = '-60px';
+    el.style.animation = '';
+    el.classList.toggle('special',  def.type === 'special');
+    el.classList.toggle('powerup',  def.type === 'shield' || def.type === 'double');
+    el.setAttribute('data-pool-idx', _pool.indexOf(slot));
+
+    // animate fall via CSS transition on top
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.style.transition = `top ${fallDur}ms linear`;
+        el.style.top = (_arena.offsetHeight + 20) + 'px';
+      });
+    });
+
+    // auto-release when heart reaches bottom (missed)
+    slot.timer = setTimeout(() => {
+      if (!slot.active) return;
+      if (!state.shieldActive) {
+        state.missed++;
+        state.combo = 0;
+        _updateCombo();
+        // flash arena red
+        _flashArena();
+      }
+      _releaseHeart(slot);
+    }, fallDur + 100);
+  }
+
+  // ─── Click / Catch ───
+  function _onHeartClick(e) {
+    e.stopPropagation();
+    if (state.phase !== 'playing') return;
+
+    const idx  = parseInt(e.currentTarget.getAttribute('data-pool-idx'), 10);
+    const slot = _pool[idx];
+    if (!slot?.active) return;
+
+    const def = slot.def;
+
+    // pop animation
+    slot.el.classList.add('popped');
+    _releaseHeart(slot);
+
+    const now = Date.now();
+
+    if (def.type === 'shield') {
+      _activateShield();
+      _spawnPowerMsg('🛡️ درع! مفيش خصم ثواني!');
+      return;
+    }
+    if (def.type === 'double') {
+      _activateDouble();
+      _spawnPowerMsg('✨ نقاط مضاعفة!');
+      return;
+    }
+
+    // combo check
+    if (now - state.lastCatch <= CFG.comboWindow) {
+      state.combo++;
+    } else {
+      state.combo = 1;
+    }
+    state.lastCatch = now;
+    if (state.combo > state.maxCombo) state.maxCombo = state.combo;
+
+    // points
+    let pts = def.pts;
+    if (state.doubleActive) pts *= 2;
+    if (state.combo >= 5)   pts += 1;  // bonus on high combo
+
+    state.score  += pts;
+    state.caught++;
+
+    // level up check
+    const newLevel = Math.floor(state.score / CFG.levelEvery) + 1;
+    if (newLevel > state.level) {
+      state.level = newLevel;
+      _spawnPowerMsg(`مستوى ${state.level}! 🔥`);
+    }
+
+    _updateHUD();
+    _updateCombo();
+
+    // bump HUD score
+    _dom.scoreEl?.classList.remove('bump');
+    requestAnimationFrame(() => _dom.scoreEl?.classList.add('bump'));
+    setTimeout(() => _dom.scoreEl?.classList.remove('bump'), 350);
+
+    // score pop
+    const cx = e.clientX ?? e.touches?.[0]?.clientX ?? window.innerWidth / 2;
+    const cy = e.clientY ?? e.touches?.[0]?.clientY ?? window.innerHeight / 2;
+    _spawnScorePop(`+${pts}`, cx, cy, pts >= 3 ? '#c9914a' : 'var(--rose)');
+
+    // combo burst
+    if (state.combo >= 3) {
+      _spawnComboBurst(cx, cy);
+    }
+
+    // hearts burst
+    if (window.FloatingHearts && state.combo >= 4) {
+      FloatingHearts.burst({ count: state.combo + 2, emojis: ['❤️','💕','💖','✨'] });
+    }
+  }
+
+  // ─── Power-ups ───
+  function _activateShield() {
+    state.shieldActive = true;
+    if (_dom.arena) _dom.arena.style.boxShadow = 'inset 0 0 0 3px rgba(78,205,196,0.7)';
+    setTimeout(() => {
+      state.shieldActive = false;
+      if (_dom.arena) _dom.arena.style.boxShadow = '';
+    }, 5000);
+  }
+
+  function _activateDouble() {
+    state.doubleActive = true;
+    if (_dom.arena) _dom.arena.style.boxShadow = 'inset 0 0 0 3px rgba(232,85,109,0.7)';
+    setTimeout(() => {
+      state.doubleActive = false;
+      if (_dom.arena) _dom.arena.style.boxShadow = '';
+    }, 6000);
+  }
+
+  // ─── End Game ───
+  function _endGame() {
+    state.phase = 'playing'; // allow cleanup
+    clearInterval(_countdownTimer);
+    clearTimeout(_spawnTimer);
+    _pool.forEach(h => { if (h.active) _releaseHeart(h); });
+    state.phase = 'result';
+
+    const isNewRecord = state.score > state.highScore;
+    if (isNewRecord) {
+      state.highScore = state.score;
+      _save('hc_high_score', state.highScore);
+    }
+    if (state.maxCombo > _load('hc_max_combo', 0)) {
+      _save('hc_max_combo', state.maxCombo);
+    }
+
+    _showResult(isNewRecord);
+    if (window.FloatingHearts) FloatingHearts.confetti(35);
+  }
+
+  // ─── Pause / Resume ───
+  function pauseGame() {
+    if (state.phase !== 'playing') return;
+    state.phase = 'paused';
+    clearInterval(_countdownTimer);
+    clearTimeout(_spawnTimer);
+    _showScreen('pause');
+  }
+
+  function resumeGame() {
+    if (state.phase !== 'paused') return;
+    state.phase = 'playing';
+    _countdownTimer = setInterval(_tick, 1000);
+    _scheduleSpawn();
+    _showScreen('game');
+  }
+
+  // ─── HUD updates ───
+  function _updateHUD() {
+    if (_dom.scoreEl) _dom.scoreEl.textContent = state.score;
+    if (_dom.levelEl) _dom.levelEl.textContent = state.level;
+    _updateTimer();
+  }
+
+  function _updateTimer() {
+    if (_dom.timerEl) _dom.timerEl.textContent = state.timeLeft;
+
+    const pct = ((CFG.totalTime - state.timeLeft) / CFG.totalTime * 100).toFixed(1);
+    if (_dom.progFill)  _dom.progFill.style.width  = pct + '%';
+    if (_dom.progLabel) _dom.progLabel.textContent = `${state.caught} قلب`;
+
+    // urgent styling
+    const ring = document.getElementById('timer-ring');
+    if (ring) ring.classList.toggle('urgent', state.timeLeft <= 10);
+  }
+
+  function _updateCombo() {
+    const pill = _dom.comboEl?.closest?.('.hud-pill') ?? _dom.comboEl?.parentElement;
+    if (_dom.comboEl) _dom.comboEl.textContent = state.combo;
+    if (pill) {
+      pill.classList.toggle('hot', state.combo >= 3);
+      if (state.combo >= 3) {
+        pill.classList.remove('bump');
+        requestAnimationFrame(() => pill.classList.add('bump'));
+        setTimeout(() => pill.classList.remove('bump'), 350);
+      }
+    }
+  }
+
+  // ─── Visual effects ───
+  function _flashArena() {
+    if (!_arena) return;
+    _arena.style.transition = 'box-shadow .12s ease';
+    _arena.style.boxShadow  = 'inset 0 0 0 3px rgba(244,67,54,0.55)';
+    setTimeout(() => { _arena.style.boxShadow = ''; }, 300);
+  }
+
+  function _spawnScorePop(text, x, y, color) {
     const el = document.createElement('div');
-    el.className = 'score-pop';
+    el.className   = 'score-pop';
     el.textContent = text;
-    el.style.cssText = `left:${x}px;top:${y}px;color:${color};font-size:1.9rem;`;
+    el.style.left  = x + 'px';
+    el.style.top   = y + 'px';
+    el.style.color = color || 'var(--rose)';
+    el.style.fontSize = '1.6rem';
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 1100);
-}
-function spawnComboBurst(x, y) {
-    const el = document.createElement('div');
-    el.className = 'combo-burst';
-    el.textContent = '🔥 COMBO ×' + Math.floor(gs.combo / 5);
-    el.style.cssText = `left:${x}px;top:${y}px;`;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 1400);
-}
-function spawnParticles(x, y) {
-    const cols = ['#e8556d', '#f7a3b0', '#c03558', '#ffd6e0', '#fff0f5'];
-    for (let i = 0; i < 9; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        const a = (i / 9) * Math.PI * 2, d = 30 + Math.random() * 45;
-        p.style.cssText = `left:${x}px;top:${y}px;width:${4 + Math.random() * 5}px;height:${4 + Math.random() * 5}px;background:${cols[Math.floor(Math.random() * cols.length)]};--tx:${Math.cos(a) * d}px;--ty:${Math.sin(a) * d}px;--d:${.4 + Math.random() * .4}s;`;
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 900);
-    }
-}
-function showMsg(text) {
-    const el = document.createElement('div');
-    el.className = 'power-msg'; el.textContent = text;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 2400);
-}
+    el.addEventListener('animationend', () => el.remove(), { once: true });
+  }
 
-/* ── INIT ── */
-document.addEventListener('DOMContentLoaded', () => {
-    loadData();
-    $('start-btn').onclick = startGame;
-    $('pause-btn').onclick = pauseGame;
-    $('resume-btn').onclick = resumeGame;
-    $('restart-btn').onclick = restartGame;
-    $('quit-btn').onclick = quitGame;
-    document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
-});
+  function _spawnComboBurst(x, y) {
+    const el = document.createElement('div');
+    el.className   = 'combo-burst';
+    el.textContent = state.combo >= 8 ? `${state.combo}x OMG! 🔥` : `${state.combo}x COMBO! 💥`;
+    el.style.left  = x + 'px';
+    el.style.top   = y + 'px';
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove(), { once: true });
+  }
+
+  function _spawnPowerMsg(text) {
+    const el = document.createElement('div');
+    el.className   = 'power-msg';
+    el.textContent = text;
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove(), { once: true });
+  }
+
+  // ─── Screen management ───
+  function _showScreen(which) {
+    _dom.menu?.classList.toggle(      'hidden', which !== 'menu');
+    _dom.gameScreen?.classList.toggle('hidden', which !== 'game');
+    _dom.pauseOv?.classList.toggle(   'hidden', which !== 'pause');
+    _dom.resultBox?.classList.toggle( 'hidden', which !== 'result');
+  }
+
+  function _hideResult() {
+    _dom.resultBox?.classList.add('hidden');
+  }
+
+  function _goHome() {
+    _showScreen('menu');
+    state.phase = 'menu';
+    // refresh menu stats
+    if (_dom.menuHS)   _dom.menuHS.textContent   = _load('hc_high_score', 0);
+    if (_dom.menuMaxC) _dom.menuMaxC.textContent = _load('hc_max_combo',  0);
+  }
+
+  function _showResult(isNewRecord) {
+    _showScreen('result');
+
+    let msg, emoji;
+    const pct = state.caught / Math.max(1, state.caught + state.missed) * 100;
+    if      (state.score >= 60)  { msg = 'خارقة! إنتِ ملكة القلوب! 👑';        emoji = '👑'; }
+    else if (state.score >= 40)  { msg = 'ممتازة جداً! قلبك سريع! 🏆';          emoji = '🏆'; }
+    else if (state.score >= 25)  { msg = 'كويس! بس إنتِ أحسن من كده 😊';       emoji = '💕'; }
+    else if (state.score >= 10)  { msg = 'حلو! محتاجة تتمرني أكتر 😄';          emoji = '⭐'; }
+    else                          { msg = 'مش مهم، محمد بيحبك على طول 💝';      emoji = '💝'; }
+
+    if (_dom.resScore)  _dom.resScore.textContent  = state.score;
+    if (_dom.resCaught) _dom.resCaught.textContent = state.caught;
+    if (_dom.resMissed) _dom.resMissed.textContent = state.missed;
+    if (_dom.resCombo)  _dom.resCombo.textContent  = state.maxCombo + 'x';
+    if (_dom.resMsg)    _dom.resMsg.textContent    = `${emoji} ${msg}`;
+    if (_dom.resNewRec) _dom.resNewRec.classList.toggle('hidden', !isNewRecord);
+  }
+
+  // ─── Persist ───
+  function _save(key, val) {
+    try { localStorage.setItem(key, String(val)); } catch (_) {}
+  }
+  function _load(key, fallback) {
+    try { return parseInt(localStorage.getItem(key) || String(fallback), 10) || fallback; } catch (_) { return fallback; }
+  }
+
+  return { init, startGame, pauseGame, resumeGame };
+})();
+
+document.addEventListener('DOMContentLoaded', () => HeartCatcherGame.init());

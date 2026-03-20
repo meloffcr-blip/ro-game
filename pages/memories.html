@@ -1,43 +1,113 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ذكرياتنا - رحمة ❤️</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ذكرياتنا 💖</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&family=Aref+Ruqaa:wght@400;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
 <body>
   <div id="custom-cursor"></div>
   <div id="cursor-trail"></div>
-  <div class="container">
-    <a href="../index.html" class="back-btn">← العودة للرئيسية</a>
-    <h1>💖 ذكرياتنا الجميلة</h1>
-    <div id="memory-lane-container">
-      <div class="memory-card">
-        <div class="memory-img-placeholder">
-          <div id="memory-emoji" style="font-size:3rem;margin-bottom:8px;">💫</div>
+
+  <div style="padding: 24px; max-width: 680px; margin: 0 auto; position: relative; z-index: 1;">
+
+    <a href="../index.html" class="back-btn">← الرئيسية</a>
+
+    <div style="text-align:center; margin-bottom: 36px;">
+      <div class="section-label">ذكرياتنا معاً</div>
+      <h1 style="font-family:'Aref Ruqaa',serif; font-size: clamp(1.8rem,5vw,2.6rem); color: var(--ink); margin-top: 12px;">
+        اللحظات اللي جمعتنا 💖
+      </h1>
+      <p style="font-family:'Dancing Script',cursive; font-size:1.25rem; color: var(--muted); margin-top:8px;">
+        كل لحظة معاكِ بتفضل في قلبي للأبد
+      </p>
+    </div>
+
+    <!-- Memory Card -->
+    <div id="memory-lane-container" class="container" style="padding: 0; overflow: visible; transform: none; opacity: 1; animation: none;">
+      <div class="memory-card" id="memory-card-wrap">
+        <div class="memory-img-placeholder" id="memory-emoji-wrap">
+          <span id="memory-emoji" style="font-size:4rem;">💫</span>
         </div>
-        <p class="memory-caption"></p>
-        <p id="memory-counter" style="font-size:.85rem;color:var(--muted);margin-top:6px;"></p>
+        <div class="memory-caption" id="memory-caption-text">
+          أول مرة شفتك فيها... قلبي وقف عن الخفقان لثانية
+        </div>
       </div>
-      <div class="memory-nav">
-        <button id="prev-memory-btn">← السابق</button>
-        <button id="like-memory-btn">💖 أحبها</button>
-        <button id="next-memory-btn">التالي →</button>
+
+      <!-- Counter -->
+      <div style="text-align:center; margin-top: 16px; color: var(--muted); font-size:.9rem;">
+        <span id="memory-counter">1 / 7</span>
       </div>
-      <div style="text-align:center;margin-top:12px;">
-        <button id="share-memory-btn" class="message-btn" style="font-size:.9rem;padding:10px 22px;">
-          شاركي الذكرى في تيليجرام 📤
-        </button>
+
+      <!-- Navigation -->
+      <div class="memory-nav" style="display:flex; gap:12px; justify-content:center; margin-top:16px; padding-bottom:20px; flex-wrap:wrap;">
+        <button id="prev-memory-btn" style="min-width:110px;">← السابق</button>
+        <button id="like-memory-btn" style="background:linear-gradient(135deg,rgba(232,85,109,0.85),rgba(200,53,85,0.9));">❤️ أحبها</button>
+        <button id="next-memory-btn" style="min-width:110px;">التالي →</button>
       </div>
     </div>
+
+    <!-- Dots indicator -->
+    <div id="memory-dots" style="display:flex; justify-content:center; gap:8px; margin-top:20px; flex-wrap:wrap;"></div>
+
   </div>
 
+  <footer>صُنع بكل <span>❤️</span> لأجلك يا رحمة</footer>
+
+  <script src="../assets/js/config.js"></script>
   <script src="../assets/js/components/toast.js"></script>
   <script src="../assets/js/components/floating-hearts.js"></script>
   <script src="../assets/js/components/cursor.js"></script>
-  <script src="../assets/js/app.js"></script>
   <script src="../assets/js/components/memories.js"></script>
+  <script>
+    // Dots sync
+    document.addEventListener('DOMContentLoaded', () => {
+      const dotsWrap = document.getElementById('memory-dots');
+      const TOTAL    = 7;
+      let active     = 0;
+
+      // build dots
+      for (let i = 0; i < TOTAL; i++) {
+        const d = document.createElement('div');
+        d.style.cssText = `
+          width:8px; height:8px; border-radius:50%;
+          background: ${i === 0 ? 'var(--rose)' : 'rgba(232,85,109,0.25)'};
+          transition: background .3s ease, transform .3s cubic-bezier(.34,1.56,.64,1);
+          cursor:pointer;
+        `;
+        d.addEventListener('click', () => {
+          const diff = i - active;
+          for (let j = 0; j < Math.abs(diff); j++) {
+            const btn = diff > 0
+              ? document.getElementById('next-memory-btn')
+              : document.getElementById('prev-memory-btn');
+            btn?.click();
+          }
+        });
+        dotsWrap.appendChild(d);
+      }
+
+      function _syncDots(idx) {
+        active = idx;
+        dotsWrap.querySelectorAll('div').forEach((d, i) => {
+          d.style.background  = i === idx ? 'var(--rose)' : 'rgba(232,85,109,0.25)';
+          d.style.transform   = i === idx ? 'scale(1.3)' : 'scale(1)';
+        });
+      }
+
+      // intercept next/prev to sync dots
+      const counter = document.getElementById('memory-counter');
+      const observer = new MutationObserver(() => {
+        const text = counter?.textContent ?? '1 / 7';
+        const idx  = parseInt(text) - 1;
+        if (!isNaN(idx)) _syncDots(idx);
+      });
+      if (counter) observer.observe(counter, { childList: true, characterData: true, subtree: true });
+    });
+  </script>
 </body>
 </html>

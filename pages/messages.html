@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>رسائل الحب - رحمة ❤️</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>رسائل الحب 💌</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&family=Aref+Ruqaa:wght@400;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
 <body>
   <div id="custom-cursor"></div>
   <div id="cursor-trail"></div>
-  <div class="container">
-    <a href="../index.html" class="back-btn">← العودة للرئيسية</a>
-    <h1>💌 رسائل الحب</h1>
-    <div class="messages-container">
-      <button id="compliment-btn" class="message-btn">رسالة جديدة 💌</button>
-      <button id="reveal-btn" class="message-btn">الرسالة السرية 🔐</button>
-      <div id="activity-result" class="message-display hidden"></div>
-      <div id="secret-message" class="message-display hidden">
-        <h3>رسالتي السرية ليكي...</h3>
-        <p>رحمتي، أنتِ مش بس حبيبتي، أنتِ كل دنيتي. كل ضحكة منك بتخطف قلبي. وجودك في حياتي هو أحلى هدية من ربنا. بحبك إلى الأبد.</p>
-      </div>
+
+  <div style="padding: 24px; max-width: 720px; margin: 0 auto; position: relative; z-index: 1;">
+
+    <a href="../index.html" class="back-btn">← الرئيسية</a>
+
+    <div style="text-align:center; margin-bottom: 40px;">
+      <div class="section-label">رسائل خاصة</div>
+      <h1 style="font-family:'Aref Ruqaa',serif; font-size: clamp(1.8rem,5vw,2.6rem); color: var(--ink); margin-top: 12px;">
+        رسائل الحب 💌
+      </h1>
+      <p style="font-family:'Dancing Script',cursive; font-size:1.25rem; color: var(--muted); margin-top:8px;">
+        كتبتها من القلب ليكِ يا رحمة
+      </p>
     </div>
+
+    <!-- All message cards rendered by messages.js -->
+    <div id="messages-grid"></div>
+
   </div>
 
+  <footer>صُنع بكل <span>❤️</span> لأجلك يا رحمة</footer>
+
+  <script src="../assets/js/config.js"></script>
   <script src="../assets/js/components/toast.js"></script>
   <script src="../assets/js/components/floating-hearts.js"></script>
   <script src="../assets/js/components/cursor.js"></script>
-  <script src="../assets/js/app.js"></script>
   <script src="../assets/js/components/messages.js"></script>
 </body>
 </html>

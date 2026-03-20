@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>صائد القلوب - رحمة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Aref+Ruqaa:wght@400;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/heart-catcher.css">
 </head>
 
 <body>
 
-    <div id="cur-dot"></div>
-    <div id="cur-ring"></div>
+    <div id="custom-cursor"></div>
+    <div id="cursor-trail"></div>
 
     <div id="game-wrap">
 
@@ -22,10 +23,8 @@
             <h1>صائد القلوب</h1>
             <p class="sub">لعبة مخصصة لرحمة من محمد ❤️</p>
             <div class="stats-grid">
-                <div class="stat-card"><span class="stat-label">أعلى نقاط</span><span class="stat-value" id="best-score">0</span></div>
-                <div class="stat-card"><span class="stat-label">أعلى مستوى</span><span class="stat-value" id="best-level">1</span></div>
-                <div class="stat-card"><span class="stat-label">عدد الجولات</span><span class="stat-value" id="total-games">0</span></div>
-                <div class="stat-card"><span class="stat-label">آخر لعبة</span><span class="stat-value" id="last-played">-</span></div>
+                <div class="stat-card"><span class="stat-label">أعلى نقاط</span><span class="stat-value" id="menu-high-score">0</span></div>
+                <div class="stat-card"><span class="stat-label">أعلى كومبو</span><span class="stat-value" id="menu-max-combo">0</span></div>
             </div>
             <div class="rules">
                 <h3>🎯 قواعد اللعب</h3>
@@ -39,15 +38,15 @@
         </div>
 
         <!-- ══ GAME ══ -->
-        <div id="game-screen" style="display:none;position:absolute;inset:0;">
+        <div id="game-screen" class="hidden" style="position:absolute;inset:0;">
             <div id="hud">
                 <div class="hud-side">
-                    <div class="hud-pill">🏆 <span id="score">0</span></div>
-                    <div class="hud-pill">🎯 <span id="level">1</span></div>
+                    <div class="hud-pill">🏆 <span id="score-val">0</span></div>
+                    <div class="hud-pill">🎯 <span id="level-val">1</span></div>
                 </div>
-                <div id="timer-ring"><span id="timer">30</span></div>
+                <div id="timer-ring"><span id="timer-val">60</span></div>
                 <div class="hud-side">
-                    <div class="hud-pill" id="combo-pill">🔥 <span id="combo">0</span></div>
+                    <div class="hud-pill">🔥 <span id="combo-val">0</span></div>
                     <button id="pause-btn">⏸️</button>
                 </div>
             </div>
@@ -61,8 +60,25 @@
             <div id="touch-hint">👆 المسي القلوب قبل ما تطير!</div>
         </div>
 
+        <!-- ══ RESULT ══ -->
+        <div id="result-box" class="hidden">
+            <h2>🎉 انتهت اللعبة!</h2>
+            <div id="res-new-record" class="hidden" style="color:var(--rose);font-weight:900;font-size:1.2rem;margin-bottom:10px;">🏆 رقم قياسي جديد!</div>
+            <div class="result-stats">
+                <p>النقاط: <strong id="res-score">0</strong></p>
+                <p>القلوب: <strong id="res-caught">0</strong></p>
+                <p>فاتت: <strong id="res-missed">0</strong></p>
+                <p>أعلى كومبو: <strong id="res-combo">0x</strong></p>
+            </div>
+            <div class="result-msg" id="res-msg"></div>
+            <div class="result-btns">
+                <button class="pbtn" id="play-again-btn">🔄 مرة تانية</button>
+                <button class="pbtn ghost" id="home-btn">🏠 القائمة</button>
+            </div>
+        </div>
+
         <!-- ══ PAUSE ══ -->
-        <div id="pause-overlay" style="display:none;">
+        <div id="pause-overlay" class="hidden">
             <div id="pause-box">
                 <h2>⏸️ متوقف</h2>
                 <p>النقاط: <strong id="p-score">0</strong></p>
@@ -78,6 +94,7 @@
 
     </div>
 
+    <script src="../assets/js/components/cursor.js"></script>
     <script src="../assets/js/heart-catcher.js"></script>
 
 </body>
