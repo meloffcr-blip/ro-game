@@ -1,75 +1,74 @@
 /**
  * ════════════════════════════════════════════════
- *  App Config & Entry Point
- *  الإعدادات العامة ونقطة تشغيل التطبيق
- * ════════════════════════════════════════════════
- *
- *  ⚠️ عدّل هنا فقط للإعدادات
- */
-
-window.APP_CONFIG = {
-  // ─── بيانات البوت (اختياري) ───
-  // webhookUrl: 'https://your-server.com/webhook',  // URL السيرفر لو عايز إشعارات
-
-  // ─── إعدادات اللعبة ───
-  catchGame: {
-    duration: 15,    // ثانية
-    moveSpeed: 900,  // ms بين كل حركة
-  },
-
-  heartCatcher: {
-    totalTime: 60,
-  },
-
-  // ─── إعدادات الكويز ───
-  quiz: {
-    questionsCount: 15,
-    timePerQuestion: null, // null = بدون وقت محدد
-  },
-};
-
-/**
- * ════════════════════════════════════════════════
- *  Main Entry — يشتغل في كل الصفحات
+ *  app.js — Entry Point
+ *  التحسينات:
+ *   • CONFIG انفصل لـ config.js
+ *   • celebrate effect بـ CSS class مؤقتة بدل inline style
+ *   • IntersectionObserver مع rootMargin للـ preload
+ *   • مفيش أي ارتباط بـ Telegram
  * ════════════════════════════════════════════════
  */
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // ─── Card Entrance Animations ───
   const cards = document.querySelectorAll('.activity-card, [data-animate]');
+
   if (cards.length) {
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          setTimeout(() => {
-            e.target.style.animation = 'fadeUp .55s both';
-            e.target.style.opacity   = '1';
-          }, i * 80);
-          io.unobserve(e.target);
-        }
+      entries.forEach((entry, i) => {
+        if (!entry.isIntersecting) return;
+        setTimeout(() => {
+          entry.target.style.animation = 'fadeUp .55s both';
+          entry.target.style.opacity   = '1';
+        }, i * 80);
+        io.unobserve(entry.target);
       });
-    }, { threshold: 0.1 });
+    }, {
+      threshold:  0.08,
+      rootMargin: '0px 0px -50px 0px', // يبدأ قبل ما تظهر بـ 50px
+    });
 
-    cards.forEach(c => {
-      c.style.opacity = '0';
-      io.observe(c);
+    cards.forEach(card => {
+      card.style.opacity = '0';
+      io.observe(card);
     });
   }
 
   // ─── Celebrate Button ───
   const celebrateBtn = document.getElementById('celebrate-btn');
   if (celebrateBtn) {
-    celebrateBtn.addEventListener('click', () => {
-      FloatingHearts.burst({ count: 22 });
-
-      // تأثير الخلفية
-      document.body.style.transition = 'background 0.5s';
-      document.body.style.background = 'linear-gradient(45deg,#ff6b6b,#feca57,#48dbfb,#ff9ff3)';
-      document.body.style.backgroundSize = '400% 400%';
-      setTimeout(() => {
-        document.body.style.background = '';
-      }, 3000);
-    });
+    celebrateBtn.addEventListener('click', _onCelebrate);
   }
 
 });
+
+// ─── Celebrate Effect ───
+// (CSS class مؤقتة بدل override على body.style)
+(function _injectCelebrateCss() {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes celebrateBg {
+      0%   { background-position: 0% 50%;   }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%;   }
+    }
+    body.celebrating {
+      background:
+        linear-gradient(135deg, #ff6b9d, #feca57, #ff9ff3, #e8556d, #ff6b6b) !important;
+      background-size: 400% 400% !important;
+      animation: celebrateBg 3s ease forwards !important;
+      background-attachment: fixed !important;
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+function _onCelebrate() {
+  // قلوب
+  if (window.FloatingHearts) FloatingHearts.burst({ count: 22 });
+
+  // تأثير الخلفية عبر CSS class
+  document.body.classList.add('celebrating');
+  setTimeout(() => document.body.classList.remove('celebrating'), 3200);
+}
