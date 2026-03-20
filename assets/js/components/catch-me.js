@@ -1,7 +1,6 @@
 /**
  * ════════════════════════════════════════
  *  CatchMe Game Component
- *  لعبة أمسكني مع تيليجرام + High Score
  * ════════════════════════════════════════
  */
 
@@ -15,7 +14,6 @@ const CatchMeGame = (() => {
   let moveInterval = null;
   let highScore = 0;
 
-  // DOM refs
   let startBtn, gameDiv, target, scoreSpan, timerSpan, gameArea, highScoreSpan;
 
   function init() {
@@ -29,19 +27,10 @@ const CatchMeGame = (() => {
 
     if (!startBtn) return;
 
-    _loadHighScore().then(hs => {
-      highScore = hs;
-      if (highScoreSpan) highScoreSpan.textContent = highScore;
-    });
+    highScore = parseInt(localStorage.getItem('catch_high_score') ?? '0', 10);
+    if (highScoreSpan) highScoreSpan.textContent = highScore;
 
     startBtn.addEventListener('click', start);
-
-    // Telegram Back Button
-    window.Telegram_App?.on('backButtonClicked', () => {
-      if (gameDiv && !gameDiv.classList.contains('hidden')) {
-        _endGame();
-      }
-    });
   }
 
   function start() {
@@ -59,18 +48,11 @@ const CatchMeGame = (() => {
 
     target?.addEventListener('click', _catch);
     target?.addEventListener('touchstart', _catch, { passive: true });
-
-    // Telegram Main Button: إنهاء اللعبة
-    window.Telegram_App?.showMainButton('إنهاء اللعبة ⏹', () => _endGame());
-    window.Telegram_App?.Haptic?.light?.();
   }
 
   function _tick() {
     timeLeft--;
     if (timerSpan) timerSpan.textContent = timeLeft;
-
-    // تنبيه لما الوقت ٥ ثواني
-    if (timeLeft === 5) window.Telegram_App?.Haptic?.warning?.();
     if (timeLeft <= 0) _endGame();
   }
 
@@ -86,11 +68,8 @@ const CatchMeGame = (() => {
   function _catch() {
     score++;
     if (scoreSpan) scoreSpan.textContent = score;
-
     target.style.transform = 'scale(1.3) rotate(10deg)';
     setTimeout(() => { target.style.transform = 'scale(1) rotate(0)'; }, 200);
-
-    window.Telegram_App?.Haptic?.medium?.();
     FloatingHearts.burst({ count: 3, emojis: ['❤️','💕','⭐'] });
   }
 
@@ -103,7 +82,7 @@ const CatchMeGame = (() => {
     const isNewRecord = score > highScore;
     if (isNewRecord) {
       highScore = score;
-      _saveHighScore(highScore);
+      localStorage.setItem('catch_high_score', String(highScore));
     }
 
     let msg, emoji;
@@ -118,43 +97,11 @@ const CatchMeGame = (() => {
         <p style="font-size:1.4rem;font-weight:700;margin-bottom:6px;">النقاط: ${score}</p>
         ${isNewRecord ? '<p style="color:gold;font-weight:700;margin-bottom:6px;">🎉 رقم قياسي جديد!</p>' : ''}
         <p style="margin-bottom:20px;">${msg}</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-          <button onclick="location.reload()" class="game-btn">العب تاني 🔄</button>
-          <button id="share-score-btn" class="game-btn" style="background:var(--rose,#e8556d);color:#fff;">
-            شاركي النتيجة 📤
-          </button>
-        </div>
+        <button onclick="location.reload()" class="game-btn">العب تاني 🔄</button>
       </div>
     `;
 
-    document.getElementById('share-score-btn')?.addEventListener('click', () => {
-      window.Telegram_App?.shareScore({
-        gameName: 'لعبة أمسكني 🏃‍♂️',
-        score,
-        maxScore: CONFIG.duration * 2,
-      });
-      window.Telegram_App?.notifyBot('game_score', {
-        game: 'catch_me',
-        score,
-        isNewRecord,
-      });
-    });
-
-    window.Telegram_App?.Haptic?.success?.();
-    window.Telegram_App?.hideMainButton?.();
     FloatingHearts.confetti();
-  }
-
-  async function _loadHighScore() {
-    try {
-      const val = await window.Telegram_App?.CloudStorage?.get('catch_high_score');
-      return parseInt(val, 10) || 0;
-    } catch { return 0; }
-  }
-
-  function _saveHighScore(val) {
-    window.Telegram_App?.CloudStorage?.set('catch_high_score', String(val)).catch(() => {});
-    localStorage.setItem('catch_high_score', String(val)); // fallback
   }
 
   return { init, start };

@@ -1,7 +1,6 @@
 /**
  * ════════════════════════════════════════
  *  Quiz Component
- *  كويز بالأسئلة مع تيليجرام + تقدم + CloudStorage
  * ════════════════════════════════════════
  */
 
@@ -15,7 +14,6 @@ const QuizComponent = (() => {
   let score        = 0;
   let answered     = false;
 
-  // ─── Load Questions ───
   async function _loadQuestions() {
     try {
       const res  = await fetch('../assets/js/questions.json');
@@ -38,7 +36,6 @@ const QuizComponent = (() => {
     return [...arr].sort(() => Math.random() - 0.5);
   }
 
-  // ─── Init ───
   async function init() {
     const startBtn = document.getElementById('start-quiz-btn');
     if (!startBtn) return;
@@ -47,17 +44,11 @@ const QuizComponent = (() => {
 
     startBtn.addEventListener('click', _start);
 
-    // تحميل آخر نتيجة
-    _loadBestScore().then(best => {
-      const bestEl = document.getElementById('quiz-best-score');
-      if (bestEl && best > 0) {
-        bestEl.textContent = `أحسن نتيجة سابقة: ${best}/${CONFIG.questionsCount} 🏆`;
-        bestEl.style.display = 'block';
-      }
-    });
-
-    if (window.Telegram_App?.isInTelegram()) {
-      window.Telegram_App.showMainButton('ابدئي الاختبار 📝', _start);
+    const best = parseInt(localStorage.getItem('quiz_best') ?? '0', 10);
+    const bestEl = document.getElementById('quiz-best-score');
+    if (bestEl && best > 0) {
+      bestEl.textContent = `أحسن نتيجة سابقة: ${best}/${CONFIG.questionsCount} 🏆`;
+      bestEl.style.display = 'block';
     }
   }
 
@@ -69,9 +60,6 @@ const QuizComponent = (() => {
 
     document.getElementById('start-quiz-btn').style.display = 'none';
     document.getElementById('quiz-content').classList.remove('hidden');
-
-    window.Telegram_App?.Haptic?.light?.();
-    window.Telegram_App?.showMainButton('إنهاء الاختبار ⏹', _showFinalResult);
 
     _showQuestion();
   }
@@ -92,7 +80,7 @@ const QuizComponent = (() => {
           </span>
         </div>
         <div style="height:6px;background:rgba(255,200,215,.3);border-radius:10px;overflow:hidden;border:1px solid rgba(232,85,109,.15);">
-          <div id="quiz-progress-bar" style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--rose-lt,#f7a3b0),var(--rose,#e8556d));border-radius:10px;transition:width .4s ease;"></div>
+          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--rose-lt,#f7a3b0),var(--rose,#e8556d));border-radius:10px;transition:width .4s ease;"></div>
         </div>
       </div>
 
@@ -121,7 +109,6 @@ const QuizComponent = (() => {
       </div>
     `;
 
-    // ربط الأزرار
     document.querySelectorAll('.quiz-option').forEach(btn => {
       btn.addEventListener('click', () => _answer(parseInt(btn.dataset.idx)));
     });
@@ -137,13 +124,9 @@ const QuizComponent = (() => {
 
     if (isCorrect) {
       score++;
-      window.Telegram_App?.Haptic?.success?.();
       FloatingHearts.burst({ count: 6, emojis: ['⭐','✅','💖'] });
-    } else {
-      window.Telegram_App?.Haptic?.error?.();
     }
 
-    // تلوين الإجابات
     btns.forEach((btn, i) => {
       btn.dataset.answered = 'true';
       btn.style.cursor = 'default';
@@ -159,22 +142,15 @@ const QuizComponent = (() => {
       }
     });
 
-    // زرار التالي
     const nextLabel = current + 1 < questions.length ? 'السؤال التالي ←' : 'النتيجة النهائية 🏆';
     const nextBtn = document.createElement('button');
     nextBtn.textContent = nextLabel;
     nextBtn.className   = 'game-btn';
     Object.assign(nextBtn.style, {
-      marginTop: '18px',
-      width: '100%',
-      background: 'var(--rose,#e8556d)',
-      color: '#fff',
-      border: 'none',
-      padding: '14px',
-      borderRadius: '14px',
-      fontSize: '1rem',
-      fontFamily: 'inherit',
-      cursor: 'pointer',
+      marginTop: '18px', width: '100%',
+      background: 'var(--rose,#e8556d)', color: '#fff',
+      border: 'none', padding: '14px', borderRadius: '14px',
+      fontSize: '1rem', fontFamily: 'inherit', cursor: 'pointer',
     });
 
     nextBtn.addEventListener('click', () => {
@@ -202,46 +178,14 @@ const QuizComponent = (() => {
         <div style="font-size:2rem;font-weight:900;margin-bottom:6px;">${score} / ${questions.length}</div>
         <div style="font-size:1.1rem;color:var(--muted);margin-bottom:6px;">${pct}%</div>
         <p style="margin-bottom:20px;">${msg}</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-          <button onclick="location.reload()" class="game-btn">حاولي تاني 🔄</button>
-          <button id="quiz-share-btn" class="game-btn" style="background:var(--rose,#e8556d);color:#fff;">
-            شاركي النتيجة 📤
-          </button>
-        </div>
+        <button onclick="location.reload()" class="game-btn">حاولي تاني 🔄</button>
       </div>
     `;
 
-    document.getElementById('quiz-share-btn')?.addEventListener('click', () => {
-      window.Telegram_App?.shareScore({
-        gameName: 'كويز محمد 💝',
-        score,
-        maxScore: questions.length,
-      });
-      window.Telegram_App?.notifyBot('quiz_completed', { score, total: questions.length, pct });
-    });
+    const prev = parseInt(localStorage.getItem('quiz_best') ?? '0', 10);
+    if (score > prev) localStorage.setItem('quiz_best', String(score));
 
-    _saveBestScore(score);
-    window.Telegram_App?.Haptic?.success?.();
-    window.Telegram_App?.hideMainButton?.();
     FloatingHearts.confetti();
-  }
-
-  async function _loadBestScore() {
-    try {
-      const val = await window.Telegram_App?.CloudStorage?.get('quiz_best');
-      return parseInt(val, 10) || 0;
-    } catch {
-      return parseInt(localStorage.getItem('quiz_best') ?? '0', 10);
-    }
-  }
-
-  function _saveBestScore(s) {
-    _loadBestScore().then(prev => {
-      if (s > prev) {
-        window.Telegram_App?.CloudStorage?.set('quiz_best', String(s)).catch(() => {});
-        localStorage.setItem('quiz_best', String(s));
-      }
-    });
   }
 
   return { init };

@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (celebrateBtn) {
     celebrateBtn.addEventListener('click', () => {
       FloatingHearts.burst({ count: 22 });
-      window.Telegram_App?.Haptic?.success?.();
 
       // تأثير الخلفية
       document.body.style.transition = 'background 0.5s';
@@ -70,14 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         document.body.style.background = '';
       }, 3000);
-    });
-  }
-
-  // ─── تيليجرام: عرض اسم اليوزر لو متاح ───
-  if (window.Telegram_App?.isInTelegram()) {
-    const name = window.Telegram_App.getUserName();
-    document.querySelectorAll('[data-tg-username]').forEach(el => {
-      el.textContent = name;
     });
   }
 
