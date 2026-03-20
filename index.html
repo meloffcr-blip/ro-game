@@ -12,6 +12,16 @@
     .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-top: 40px; }
     .activity-card--wide { grid-column: span 2; }
     @media (max-width: 480px) { .activity-card--wide { grid-column: span 1; } }
+    .activity-card.coming-soon { opacity: .72; cursor: not-allowed; }
+    .activity-card.coming-soon:hover { transform: none; box-shadow: inset 0 2px 0 rgba(255,255,255,.62), inset 1px 0 0 rgba(255,255,255,.3), 0 4px 20px rgba(232,85,109,.09), 0 16px 40px rgba(42,18,24,.04); border-color: var(--glass-border); background: var(--glass-bg); }
+    .activity-card.coming-soon:hover .card-icon { transform: none; filter: drop-shadow(0 3px 8px rgba(232,85,109,.25)); }
+    .coming-soon-badge {
+      position: absolute; top: 14px; left: 14px;
+      background: linear-gradient(135deg, rgba(232,85,109,.82), rgba(200,53,85,.9));
+      color: white; font-size: .72rem; font-weight: 700; letter-spacing: .06em;
+      padding: 4px 12px; border-radius: 99px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 3px 10px rgba(232,85,109,.35);
+    }
   </style>
 </head>
 <body>
@@ -73,6 +83,12 @@
         <div class="card-title">صائد القلوب</div>
         <div class="card-desc">اجمعي أكبر عدد من القلوب</div>
         <div class="card-arrow">← اجمعي</div>
+      </a>
+      <a href="404.html" class="activity-card coming-soon" data-animate>
+        <span class="coming-soon-badge">قريباً ✨</span>
+        <span class="card-icon">🌙</span>
+        <div class="card-title">مفاجأة قادمة</div>
+        <div class="card-desc">شيء جميل بيتجهز لكِ</div>
       </a>
     </div>
   </section>
