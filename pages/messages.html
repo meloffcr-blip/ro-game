@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رسائل الحب - رحمة ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>رسائل الحب - رحمة ❤️</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
   <div id="custom-cursor"></div>
   <div id="cursor-trail"></div>
-    <div class="container">
-        <a href="../index.html" class="back-btn">← العودة للرئيسية</a>
-        <h1>💌 رسائل الحب</h1>
-        
-        <div class="messages-container">
-            <button id="compliment-btn" class="message-btn">رسالة جديدة</button>
-            <button id="reveal-btn" class="message-btn">الرسالة السرية</button>
-            
-            <div id="activity-result" class="message-display hidden"></div>
-            <div id="secret-message" class="message-display hidden">
-                <h3>رسالتي السرية ليكي...</h3>
-                <p>رحمتي، أنتِ مش بس حبيبتي، أنتِ كل دنيتي. كل ضحكة منك بتخطف قلبي. وجودك في حياتي هو أحلى هدية من ربنا. بحبك إلى الأبد.</p>
-            </div>
-        </div>
+  <div class="container">
+    <a href="../index.html" class="back-btn">← العودة للرئيسية</a>
+    <h1>💌 رسائل الحب</h1>
+    <div class="messages-container">
+      <button id="compliment-btn" class="message-btn">رسالة جديدة 💌</button>
+      <button id="reveal-btn" class="message-btn">الرسالة السرية 🔐</button>
+      <div id="activity-result" class="message-display hidden"></div>
+      <div id="secret-message" class="message-display hidden">
+        <h3>رسالتي السرية ليكي...</h3>
+        <p>رحمتي، أنتِ مش بس حبيبتي، أنتِ كل دنيتي. كل ضحكة منك بتخطف قلبي. وجودك في حياتي هو أحلى هدية من ربنا. بحبك إلى الأبد.</p>
+      </div>
     </div>
-    <script src="../assets/js/messages.js"></script>
-  <script>
-    const _c=document.getElementById("custom-cursor"),_t=document.getElementById("cursor-trail");let _mx=-100,_my=-100,_tx=-100,_ty=-100;document.addEventListener("mousemove",e=>{_mx=e.clientX;_my=e.clientY;_c.style.left=_mx+"px";_c.style.top=_my+"px";});(function a(){_tx+=(_mx-_tx)*.14;_ty+=(_my-_ty)*.14;_t.style.left=_tx+"px";_t.style.top=_ty+"px";requestAnimationFrame(a);})();document.querySelectorAll("a,button").forEach(e=>{e.addEventListener("mouseenter",()=>{_c.style.width="26px";_c.style.height="26px";_t.style.width="52px";_t.style.height="52px";});e.addEventListener("mouseleave",()=>{_c.style.width="18px";_c.style.height="18px";_t.style.width="36px";_t.style.height="36px";});});
-  </script>
+  </div>
+
+  <script src="../assets/js/components/telegram.js"></script>
+  <script src="../assets/js/components/toast.js"></script>
+  <script src="../assets/js/components/floating-hearts.js"></script>
+  <script src="../assets/js/components/cursor.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/components/messages.js"></script>
 </body>
 </html>

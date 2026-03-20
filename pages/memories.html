@@ -1,33 +1,45 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ذكرياتنا - رحمة ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ذكرياتنا - رحمة ❤️</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
   <div id="custom-cursor"></div>
   <div id="cursor-trail"></div>
-    <div class="container">
-        <a href="../index.html" class="back-btn">← العودة للرئيسية</a>
-        <h1>💖 ذكرياتنا الجميلة</h1>
-        
-        <div id="memory-lane-container">
-            <div class="memory-card">
-                <div class="memory-img-placeholder"></div>
-                <p class="memory-caption"></p>
-            </div>
-            <div class="memory-nav">
-                <button id="prev-memory-btn">السابق</button>
-                <button id="next-memory-btn">التالي</button>
-            </div>
+  <div class="container">
+    <a href="../index.html" class="back-btn">← العودة للرئيسية</a>
+    <h1>💖 ذكرياتنا الجميلة</h1>
+    <div id="memory-lane-container">
+      <div class="memory-card">
+        <div class="memory-img-placeholder">
+          <div id="memory-emoji" style="font-size:3rem;margin-bottom:8px;">💫</div>
         </div>
+        <p class="memory-caption"></p>
+        <p id="memory-counter" style="font-size:.85rem;color:var(--muted);margin-top:6px;"></p>
+      </div>
+      <div class="memory-nav">
+        <button id="prev-memory-btn">← السابق</button>
+        <button id="like-memory-btn">💖 أحبها</button>
+        <button id="next-memory-btn">التالي →</button>
+      </div>
+      <div style="text-align:center;margin-top:12px;">
+        <button id="share-memory-btn" class="message-btn" style="font-size:.9rem;padding:10px 22px;">
+          شاركي الذكرى في تيليجرام 📤
+        </button>
+      </div>
     </div>
-    <script src="../assets/js/memories.js"></script>
-  <script>
-    const _c=document.getElementById("custom-cursor"),_t=document.getElementById("cursor-trail");let _mx=-100,_my=-100,_tx=-100,_ty=-100;document.addEventListener("mousemove",e=>{_mx=e.clientX;_my=e.clientY;_c.style.left=_mx+"px";_c.style.top=_my+"px";});(function a(){_tx+=(_mx-_tx)*.14;_ty+=(_my-_ty)*.14;_t.style.left=_tx+"px";_t.style.top=_ty+"px";requestAnimationFrame(a);})();document.querySelectorAll("a,button").forEach(e=>{e.addEventListener("mouseenter",()=>{_c.style.width="26px";_c.style.height="26px";_t.style.width="52px";_t.style.height="52px";});e.addEventListener("mouseleave",()=>{_c.style.width="18px";_c.style.height="18px";_t.style.width="36px";_t.style.height="36px";});});
-  </script>
+  </div>
+
+  <script src="../assets/js/components/telegram.js"></script>
+  <script src="../assets/js/components/toast.js"></script>
+  <script src="../assets/js/components/floating-hearts.js"></script>
+  <script src="../assets/js/components/cursor.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/components/memories.js"></script>
 </body>
 </html>
