@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قريباً ✨ — رحمة</title>
+  <meta name="description" content="شيء جميل بيتجهز لكِ يا رحمة 🌹" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/x-icon" href="ico/home.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&family=Aref+Ruqaa:wght@400;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    .cs-number {
+      font-family: 'Aref Ruqaa', serif;
+      font-size: clamp(5rem, 20vw, 10rem);
+      font-weight: 700;
+      color: transparent;
+      -webkit-text-stroke: 3px var(--rose-lt);
+      line-height: 1;
+      opacity: 0;
+      animation: fadeUp .7s .3s forwards;
+      filter: drop-shadow(0 4px 24px rgba(232,85,109,.22));
+    }
+    .dots span {
+      display: inline-block;
+      width: 10px; height: 10px;
+      background: var(--rose-lt);
+      border-radius: 50%;
+      margin: 0 5px;
+      animation: dotBounce 1.4s ease-in-out infinite;
+    }
+    .dots span:nth-child(2) { animation-delay: .2s; background: var(--rose); }
+    .dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes dotBounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: .5; }
+      40%            { transform: translateY(-10px); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div id="custom-cursor"></div>
+  <div id="cursor-trail"></div>
+
+  <section class="hero">
+    <div class="blob blob-1"></div><div class="blob blob-2"></div>
+    <div class="blob blob-3"></div><div class="blob blob-4"></div>
+
+    <div class="badge">✨ &nbsp;شيء جميل في الطريق</div>
+
+    <div class="cs-number">قريباً</div>
+
+    <p class="hero-sub" style="opacity:1;animation:none;margin-top:8px;">بيتجهز لكِ شيء خاص يا رحمة 🌹</p>
+
+    <div class="letter-card" style="opacity:1;animation:none;max-width:460px;text-align:center;">
+      <span class="shine"></span><span class="drop"></span>
+      <p class="letter-text" style="text-align:center;">
+        هذا القسم لسه بيتصنع بكل حب واهتمام،<br/>
+        استني قليلاً وهيكون أحلى من توقعاتك 💕
+      </p>
+      <div class="dots" style="margin-top:20px;">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <a href="index.html" class="celebrate-btn" style="opacity:1;animation:none;text-decoration:none;margin-top:8px;">
+      ارجعي للبيت 🏠
+    </a>
+  </section>
+
+  <script src="assets/js/components/cursor.js"></script>
+</body>
+</html>

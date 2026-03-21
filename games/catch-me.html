@@ -1,34 +1,47 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أمسكني لو تقدر - رحمة ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>أمسكني لو تقدري 🏃‍♂️ — رحمة</title>
+  <meta name="description" content="لعبة سريعة ومسلية — اضغطي على محمد قبل ما يهرب منك!" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/x-icon" href="../ico/quiz.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    #game-area { position:relative;width:100%;height:280px;background:rgba(255,240,245,.6);border:2px solid rgba(232,85,109,.2);border-radius:16px;overflow:hidden;touch-action:none; }
+    #mohamed-target { position:absolute;cursor:pointer;font-size:2.5rem;transition:transform .2s ease;user-select:none; }
+    .game-stats { display:flex;justify-content:space-between;padding:10px 4px;font-weight:700;font-size:1.1rem;color:var(--rose,#e8556d); }
+    #catch-high-score-row { text-align:center;font-size:.9rem;color:var(--muted);margin-bottom:10px; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <a href="../index.html" class="back-btn">← العودة للرئيسية</a>
-        <h1>🏃♂️ أمسكني لو تقدر!</h1>
-        
-        <div class="game-info">
-            <p>حاولي تمسكي محمد قبل ما الوقت يخلص!</p>
-            <button id="start-catch-game-btn" class="game-btn">ابدأ اللعبة</button>
-        </div>
-        
-        <div id="catch-me-game" class="hidden">
-            <div id="game-ui">
-                <div>النقاط: <span id="game-score">0</span></div>
-                <div>الوقت: <span id="game-timer">15</span></div>
-            </div>
-            <div id="game-area">
-                <div id="mohamed-target">
-                    <img src="../assets/images/mohamed.jpg" alt="محمد">
-                </div>
-            </div>
-        </div>
+  <div id="custom-cursor"></div>
+  <div id="cursor-trail"></div>
+  <div class="container">
+    <a href="../index.html" class="back-btn">← العودة للرئيسية</a>
+    <h1>🏃‍♂️ أمسكني لو تقدري</h1>
+    <p style="text-align:center;color:var(--muted);margin-bottom:12px;">اضغطي على محمد قبل ما يهرب منك!</p>
+    <div id="catch-high-score-row">أحسن نتيجة: <strong id="catch-high-score">0</strong> نقطة 🏆</div>
+
+    <button id="start-catch-game-btn" class="game-btn" style="display:block;margin:0 auto 20px;">ابدئي اللعبة 🎮</button>
+
+    <div id="catch-me-game" class="hidden">
+      <div class="game-stats">
+        <span>النقاط: <strong id="game-score">0</strong></span>
+        <span>الوقت: <strong id="game-timer">15</strong>s</span>
+      </div>
+      <div id="game-area">
+        <div id="mohamed-target">😄</div>
+      </div>
     </div>
-    <script src="../assets/js/catch-me.js"></script>
+  </div>
+
+  <script src="../assets/js/components/toast.js"></script>
+  <script src="../assets/js/components/floating-hearts.js"></script>
+  <script src="../assets/js/components/cursor.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/components/catch-me.js"></script>
 </body>
 </html>

@@ -1,60 +1,110 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إلى حبيبي رحمة ❤️</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إلى حبيبي رحمة ❤️</title>
+  <meta name="description" content="موقع رومانسي خاص لرحمة من محمد — رسائل حب، ذكريات، وألعاب مميزة" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:title" content="إلى حبيبي رحمة ❤️" />
+  <meta property="og:description" content="موقع رومانسي خاص لرحمة من محمد — رسائل حب، ذكريات، وألعاب مميزة" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/x-icon" href="ico/home.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&family=Aref+Ruqaa:wght@400;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    .activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-top: 40px; }
+    .activity-card--wide { grid-column: span 2; }
+    @media (max-width: 480px) { .activity-card--wide { grid-column: span 1; } }
+    .activity-card.coming-soon { opacity: .72; cursor: not-allowed; }
+    .activity-card.coming-soon:hover { transform: none; box-shadow: inset 0 2px 0 rgba(255,255,255,.62), inset 1px 0 0 rgba(255,255,255,.3), 0 4px 20px rgba(232,85,109,.09), 0 16px 40px rgba(42,18,24,.04); border-color: var(--glass-border); background: var(--glass-bg); }
+    .activity-card.coming-soon:hover .card-icon { transform: none; filter: drop-shadow(0 3px 8px rgba(232,85,109,.25)); }
+    .coming-soon-badge {
+      position: absolute; top: 14px; left: 14px;
+      background: linear-gradient(135deg, rgba(232,85,109,.82), rgba(200,53,85,.9));
+      color: white; font-size: .72rem; font-weight: 700; letter-spacing: .06em;
+      padding: 4px 12px; border-radius: 99px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 3px 10px rgba(232,85,109,.35);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="heart">❤️</div>
-        <h1>إلى أغلى إنسانة في حياتي</h1>
-        <p class="subtitle">حبيبي و روح قلبي، رحومتي</p>
-        <p class="message">
-            أردت فقط أن أخبرك كم أنا محظوظ بوجودك في حياتي. 
-            أنتِ النور الذي يضيء أيامي، والابتسامة التي تملأ قلبي بالسعادة. 
-            كل لحظة أقضيها معك هي كنز لا يقدر بثمن. 
-            أتمنى أن تبقى حياتنا مليئة بالحب والفرح إلى الأبد.
-        </p>
-        <p class="signature">حبيبك، محمد</p>
-        <button id="celebrate-btn">اضغطي هنا 💕</button>
-    </div>
+  <div id="custom-cursor"></div>
+  <div id="cursor-trail"></div>
 
-    <div class="container activities-container">
-        <h2>أنشطة رومانسية خاصة لرحمة</h2>
-        <div class="activity-grid">
-            <a href="pages/messages.html" class="activity-card">
-                <div class="card-icon">💌</div>
-                <h3>رسائل الحب</h3>
-                <p>رسائل رومانسية خاصة</p>
-            </a>
-            <a href="pages/memories.html" class="activity-card">
-                <div class="card-icon">💖</div>
-                <h3>ذكرياتنا</h3>
-                <p>أجمل اللحظات معاً</p>
-            </a>
-            <a href="games/quiz.html" class="activity-card">
-                <div class="card-icon">🤔</div>
-                <h3>لعبة الأسئلة</h3>
-                <p>اختبري معلوماتك عني</p>
-            </a>
-            <a href="games/catch-me.html" class="activity-card">
-                <div class="card-icon">🏃♂️</div>
-                <h3>أمسكني لو تقدر</h3>
-                <p>لعبة سريعة ومسلية</p>
-            </a>
-            <a href="games/heart-catcher.html" class="activity-card">
-                <div class="card-icon">💘</div>
-                <h3>صائد القلوب</h3>
-                <p>اجمعي أكبر عدد من القلوب</p>
-            </a>
-        </div>
+  <section class="hero">
+    <div class="blob blob-1"></div><div class="blob blob-2"></div>
+    <div class="blob blob-3"></div><div class="blob blob-4"></div>
+    <div class="badge">💌 &nbsp;رسالة خاصة لرحمة</div>
+    <div class="hero-heart">❤️</div>
+    <h1 class="hero-heading">إلى <span>أغلى إنسانة</span><br/>في حياتي</h1>
+    <p class="hero-sub">حبيبي وروح قلبي، رحومتي</p>
+    <div class="letter-card">
+      <span class="shine"></span><span class="drop"></span>
+      <p class="letter-text">أردت فقط أن أخبرك كم أنا محظوظ بوجودك في حياتي. أنتِ النور الذي يضيء أيامي، والابتسامة التي تملأ قلبي بالسعادة. كل لحظة أقضيها معك هي كنز لا يُقدَّر بثمن.</p>
+      <div class="letter-sig">
+        <div class="sig-dot">م</div>
+        <div class="sig-text"><strong>محمد</strong> حبيبك للأبد</div>
+      </div>
     </div>
+    <button class="celebrate-btn" id="celebrate-btn">اضغطي هنا 💕</button>
+    <div class="scroll-hint">اكتشفي المزيد بالأسفل</div>
+  </section>
 
-    <script src="assets/js/main.js"></script>
+  <div class="section-header">
+    <div class="section-label">أنشطة رومانسية</div>
+    <h2 class="section-title">خاصة لرحمة فقط 🌹</h2>
+  </div>
+
+  <section class="activities-section">
+    <div class="activity-grid">
+      <a href="pages/messages.html" class="activity-card activity-card--wide" data-animate>
+        <span class="card-icon">💌</span>
+        <div class="card-title">رسائل الحب</div>
+        <div class="card-desc">رسائل رومانسية كتبتها لكِ من القلب</div>
+        <div class="card-arrow">← اقرئي</div>
+      </a>
+      <a href="pages/memories.html" class="activity-card" data-animate>
+        <span class="card-icon">💖</span>
+        <div class="card-title">ذكرياتنا</div>
+        <div class="card-desc">أجمل اللحظات التي جمعتنا معاً</div>
+        <div class="card-arrow">← استعيدي</div>
+      </a>
+      <a href="games/quiz.html" class="activity-card" data-animate>
+        <span class="card-icon">🤔</span>
+        <div class="card-title">لعبة الأسئلة</div>
+        <div class="card-desc">اختبري معلوماتك عني</div>
+        <div class="card-arrow">← العبي</div>
+      </a>
+      <a href="games/catch-me.html" class="activity-card" data-animate>
+        <span class="card-icon">🏃‍♂️</span>
+        <div class="card-title">أمسكني لو تقدري</div>
+        <div class="card-desc">لعبة سريعة ومسلية</div>
+        <div class="card-arrow">← تحدي</div>
+      </a>
+      <a href="games/heart-catcher.html" class="activity-card" data-animate>
+        <span class="card-icon">💘</span>
+        <div class="card-title">صائد القلوب</div>
+        <div class="card-desc">اجمعي أكبر عدد من القلوب</div>
+        <div class="card-arrow">← اجمعي</div>
+      </a>
+      <a href="404.html" class="activity-card coming-soon" data-animate>
+        <span class="coming-soon-badge">قريباً ✨</span>
+        <span class="card-icon">🌙</span>
+        <div class="card-title">مفاجأة قادمة</div>
+        <div class="card-desc">شيء جميل بيتجهز لكِ</div>
+      </a>
+    </div>
+  </section>
+
+  <footer>صُنع بكل <span>❤️</span> لأجلك يا رحمة</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/components/toast.js"></script>
+<script src="assets/js/components/floating-hearts.js"></script>
+<script src="assets/js/components/cursor.js"></script>
+<script src="assets/js/app.js"></script>
 </body>
 </html>
