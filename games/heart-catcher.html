@@ -20,28 +20,58 @@
 
     <div id="game-wrap">
 
-        <!-- ══ MENU ══ -->
+        <!-- ══════════════════════════════════════════
+             MENU
+        ═══════════════════════════════════════════ -->
         <div id="menu">
             <span class="logo-heart">💖</span>
             <h1>صائد القلوب</h1>
             <p class="sub">لعبة مخصصة لرحمة من محمد ❤️</p>
+
+            <!-- Stats -->
             <div class="stats-grid">
-                <div class="stat-card"><span class="stat-label">أعلى نقاط</span><span class="stat-value" id="menu-high-score">0</span></div>
-                <div class="stat-card"><span class="stat-label">أعلى كومبو</span><span class="stat-value" id="menu-max-combo">0</span></div>
+                <div class="stat-card">
+                    <span class="stat-label">🏆 أعلى نقاط</span>
+                    <span class="stat-value" id="menu-high-score">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">🔥 أعلى كومبو</span>
+                    <span class="stat-value" id="menu-max-combo">0</span>
+                </div>
             </div>
+
+            <!-- Achievements preview -->
+            <div id="menu-achievements">
+                <h4>🏅 الإنجازات</h4>
+                <div class="menu-ach-grid" id="menu-ach-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Rules -->
             <div class="rules">
                 <h3>🎯 قواعد اللعب</h3>
                 <div class="rule-row"><span>❤️</span><span>قلب عادي = نقطة</span></div>
-                <div class="rule-row"><span>💖</span><span>قلب ملون = 3 نقاط</span></div>
-                <div class="rule-row"><span>⭐</span><span>نجمة = بونص خاص</span></div>
-                <div class="rule-row"><span>🔥</span><span>كومبو ×5 = مضاعفة</span></div>
+                <div class="rule-row"><span>💖</span><span>قلب ملون = 2-3 نقاط</span></div>
+                <div class="rule-row gem"><span>💎</span><span>جوهرة = 5 نقاط!</span></div>
+                <div class="rule-row danger"><span>💣</span><span>بمب = تخسري نقاط! تجنبيها</span></div>
+                <div class="rule-row"><span>⭐</span><span>نجمة = درع يحميكِ</span></div>
+                <div class="rule-row"><span>✨</span><span>بريق = نقاط مضاعفة</span></div>
+                <div class="rule-row"><span>🧲</span><span>مغناطيس = يجذب كل القلوب</span></div>
+                <div class="rule-row"><span>🐢</span><span>سلحفاة = يبطئ السقوط</span></div>
+                <div class="rule-row"><span>🔥</span><span>كومبو ×5 = نقطة إضافية</span></div>
             </div>
-            <button class="start-btn" id="start-btn">🎮 ابدأ اللعبة</button>
+
+            <button class="start-btn pbtn">🎮 ابدأ اللعبة</button>
             <a href="../index.html" class="back-link">← الرئيسية</a>
         </div>
 
-        <!-- ══ GAME ══ -->
+        <!-- ══════════════════════════════════════════
+             GAME SCREEN
+        ═══════════════════════════════════════════ -->
         <div id="game-screen" class="hidden" style="position:absolute;inset:0;">
+
+            <!-- HUD -->
             <div id="hud">
                 <div class="hud-side">
                     <div class="hud-pill">🏆 <span id="score-val">0</span></div>
@@ -50,43 +80,82 @@
                 <div id="timer-ring"><span id="timer-val">60</span></div>
                 <div class="hud-side">
                     <div class="hud-pill">🔥 <span id="combo-val">0</span></div>
-                    <button id="pause-btn">⏸️</button>
+                    <button id="pause-btn" aria-label="إيقاف مؤقت">⏸️</button>
                 </div>
             </div>
+
+            <!-- Wave label -->
+            <div id="wave-label"></div>
+
+            <!-- Arena (hearts fall here) -->
             <div id="arena"></div>
+
+            <!-- Power Bar (active power-ups) -->
+            <div id="power-bar"></div>
+
+            <!-- Progress bar -->
             <div id="prog-wrap">
-                <div id="prog-label">المستوى التالي</div>
+                <div id="prog-label">0 قلب</div>
                 <div id="prog-track">
                     <div id="prog-fill"></div>
                 </div>
             </div>
-            <div id="touch-hint">👆 المسي القلوب قبل ما تطير!</div>
+
+            <!-- Touch hint -->
+            <div id="touch-hint">👆 المسي القلوب قبل ما تطير! 💣 تجنبي البمب!</div>
+
         </div>
 
-        <!-- ══ RESULT ══ -->
+        <!-- ══════════════════════════════════════════
+             RESULT BOX
+        ═══════════════════════════════════════════ -->
         <div id="result-box" class="hidden">
             <h2>🎉 انتهت اللعبة!</h2>
-            <div id="res-new-record" class="hidden" style="color:var(--rose);font-weight:900;font-size:1.2rem;margin-bottom:10px;">🏆 رقم قياسي جديد!</div>
+
+            <div id="res-new-record" class="hidden">🏆 رقم قياسي جديد!</div>
+
+            <!-- Stats grid -->
             <div class="result-stats">
-                <p>النقاط: <strong id="res-score">0</strong></p>
-                <p>القلوب: <strong id="res-caught">0</strong></p>
-                <p>فاتت: <strong id="res-missed">0</strong></p>
-                <p>أعلى كومبو: <strong id="res-combo">0x</strong></p>
+                <div class="result-stat-item">
+                    <span class="result-stat-label">النقاط</span>
+                    <span class="result-stat-value" id="res-score">0</span>
+                </div>
+                <div class="result-stat-item">
+                    <span class="result-stat-label">القلوب</span>
+                    <span class="result-stat-value" id="res-caught">0</span>
+                </div>
+                <div class="result-stat-item">
+                    <span class="result-stat-label">فاتت</span>
+                    <span class="result-stat-value" id="res-missed">0</span>
+                </div>
+                <div class="result-stat-item">
+                    <span class="result-stat-label">أعلى كومبو</span>
+                    <span class="result-stat-value" id="res-combo">0x</span>
+                </div>
             </div>
+
+            <!-- Achievements earned this round -->
+            <div id="res-achievements"></div>
+
             <div class="result-msg" id="res-msg"></div>
+
             <div class="result-btns">
                 <button class="pbtn" id="play-again-btn">🔄 مرة تانية</button>
                 <button class="pbtn ghost" id="home-btn">🏠 القائمة</button>
             </div>
         </div>
 
-        <!-- ══ PAUSE ══ -->
+        <!-- ══════════════════════════════════════════
+             PAUSE OVERLAY
+        ═══════════════════════════════════════════ -->
         <div id="pause-overlay" class="hidden">
             <div id="pause-box">
                 <h2>⏸️ متوقف</h2>
-                <p>النقاط: <strong id="p-score">0</strong></p>
-                <p>المستوى: <strong id="p-level">1</strong></p>
-                <p>الكومبو: <strong id="p-combo">0</strong></p>
+                <div class="pause-stats">
+                    <div class="pause-stat">النقاط: <strong id="p-score">0</strong></div>
+                    <div class="pause-stat">المستوى: <strong id="p-level">1</strong></div>
+                    <div class="pause-stat">الكومبو: <strong id="p-combo">0</strong></div>
+                </div>
                 <div class="pbtn-row">
                     <button class="pbtn" id="resume-btn">▶️ متابعة</button>
                     <button class="pbtn" id="restart-btn">🔄 إعادة</button>
@@ -95,11 +164,42 @@
             </div>
         </div>
 
-    </div>
+    </div><!-- #game-wrap -->
 
     <script src="../assets/js/components/cursor.js"></script>
     <script src="../assets/js/heart-catcher.js"></script>
 
-</body>
+    <!-- Achievements grid population -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // نرسم الإنجازات في المينيو
+        const grid = document.getElementById('menu-ach-grid');
+        if (!grid) return;
+        const unlocked = new Set(
+            (localStorage.getItem('hc_achievements') || '').split(',').filter(Boolean)
+        );
+        const ACHIEVEMENTS = [
+            { id:'first_catch', icon:'🏅', title:'أول قلب' },
+            { id:'combo_5',     icon:'🔥', title:'كومبو ×5' },
+            { id:'combo_10',    icon:'💥', title:'كومبو ×10' },
+            { id:'score_25',    icon:'⭐', title:'25 نقطة' },
+            { id:'score_50',    icon:'🌟', title:'50 نقطة' },
+            { id:'score_100',   icon:'👑', title:'100 نقطة' },
+            { id:'gem_catch',   icon:'💎', title:'صيادة جواهر' },
+            { id:'no_miss',     icon:'🎯', title:'لا تفوتيها' },
+            { id:'bomb_dodge',  icon:'💣', title:'هربتي!' },
+            { id:'level_5',     icon:'🚀', title:'مستوى 5' },
+            { id:'magnet_use',  icon:'🧲', title:'مغناطيس' },
+            { id:'power_collector', icon:'✨', title:'جامعة قوة' },
+        ];
+        grid.innerHTML = ACHIEVEMENTS.map(a => `
+            <div class="menu-ach-item ${unlocked.has(a.id) ? 'unlocked' : ''}">
+                ${a.icon}
+                <div class="ach-tooltip">${a.title}</div>
+            </div>
+        `).join('');
+    });
+    </script>
 
+</body>
 </html>
