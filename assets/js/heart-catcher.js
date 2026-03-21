@@ -73,6 +73,7 @@ const HeartCatcherGame = (() => {
       resumeBtn:  document.getElementById('resume-btn'),
       restartBtn: document.getElementById('restart-btn'),
       homeBtn:    document.getElementById('home-btn'),
+      quitBtn:    document.getElementById('quit-btn'),
       playAgain:  document.getElementById('play-again-btn'),
       scoreEl:    document.getElementById('score-val'),
       comboEl:    document.getElementById('combo-val'),
@@ -110,6 +111,7 @@ const HeartCatcherGame = (() => {
     _dom.resumeBtn?.addEventListener('click',  resumeGame);
     _dom.restartBtn?.addEventListener('click', () => { resumeGame(); startGame(); });
     _dom.homeBtn?.addEventListener('click',    _goHome);
+    _dom.quitBtn?.addEventListener('click',   _quitGame);
     _dom.playAgain?.addEventListener('click',  () => { _hideResult(); startGame(); });
 
     // keyboard
@@ -494,6 +496,19 @@ const HeartCatcherGame = (() => {
     // refresh menu stats
     if (_dom.menuHS)   _dom.menuHS.textContent   = _load('hc_high_score', 0);
     if (_dom.menuMaxC) _dom.menuMaxC.textContent = _load('hc_max_combo',  0);
+  }
+
+  // Quit game - stop everything and go home
+  function _quitGame() {
+    // stop all timers
+    clearInterval(_countdownTimer);
+    clearTimeout(_spawnTimer);
+    // release all active hearts
+    _pool.forEach(h => { if (h.active) _releaseHeart(h); });
+    // hide pause overlay
+    if (_dom.pauseOv) _dom.pauseOv.classList.add('hidden');
+    // go to menu
+    _goHome();
   }
 
   function _showResult(isNewRecord) {
